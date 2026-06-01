@@ -10,7 +10,6 @@ Responsabilidades:
 """
 
 import pandas as pd #importamos libreria pandas. 
-import os # permite verificar si un archivo existe con os.path.exists
 
 
 COLUMNAS_ESPERADAS = [
@@ -30,20 +29,24 @@ def cargar_dataset(ruta: str) -> pd.DataFrame: #parametro: string con el camino 
         pd.DataFrame: DataFrame con los datos cargados.
 
     Raises:
-        FileNotFoundError: Si el archivo no existe.
+        FileNotFoundError: Si el archivo no se encuentra.
         ValueError: Si el formato no es CSV válido.
     """
-    #VERIFICAMOS QUE EL ARCHVIO EXISTA. Si el archivo NO existe ->lanza un error. 
-    if not os.path.exists(ruta):
-        raise FileNotFoundError(f" No se ha encontrado el archivo: {ruta}")
-    
+
     try:
-        df = pd.read_csv(ruta) #convierte en dataframe. filas = observaciones, columnas = variables
+        df = pd.read_csv(ruta)
+
         print(f"Archivo leído: {ruta} | Filas: {len(df)} | Columnas: {len(df.columns)}")
-        verificar_columnas(df) 
-        return df #Devolvemos el data set ya cargado. 
-    except pd.errors.ParserError as e: #pd.errors es submódulo dentro de pandas y ParserError Error al interpretar (parsear) un archivo de texto.
-        raise ValueError(f"Error al parsear el CSV: {e}")
+
+        verificar_columnas(df)
+
+        return df
+
+    except FileNotFoundError:
+        raise FileNotFoundError(f"No se ha encontrado el archivo: {ruta}")
+
+    except Exception as e:
+        raise ValueError(f"Error al cargar el CSV: {e}")
 
 
 def verificar_columnas(df: pd.DataFrame) -> None:
@@ -79,29 +82,45 @@ def limpiar_datos(df: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: DataFrame limpio y listo para usar.
     """
-    filas_originales = len(df) #uarda cuántas filas había antes de limpiar
-    
-    columnas_importantes = ["Personality", "Introversion Score", "Sensing Score",
-                         "Thinking Score", "Judging Score"] #NO PUEDEN SER NULOS LOS VALORES. 
-    df_limpio = df.dropna(subset=columnas_importantes).copy()
-    #dropna dropna(subset=...) elimina filas donde falten esos datos. .copy()crea una copia independiente. 
-    # eliminar nulos en columnas críticas. 
-    
-    df_limpio["Personality"] = df_limpio["Personality"].str.upper().str.strip() #" intj " → "INTJ"
-    
-    cols_numericas = ["Introversion Score", "Sensing Score",
-                      "Thinking Score", "Judging Score"] #Define qué columnas deben ser números
-    for col in cols_numericas:
-        df_limpio[col] = pd.to_numeric(df_limpio[col], errors='coerce') #ntenta convertir a número si no puede → pone NaN (errors='coerce'). 
-    
-    df_limpio = df_limpio.dropna(subset=cols_numericas) #Borra filas donde la conversión falló
-    
-    filas_finales = len(df_limpio)
-    eliminadas = filas_originales - filas_finales
-    
-    if eliminadas > 0:
-        print(f" Se eliminaron {eliminadas} filas con datos incompletos.")
-    
-    print(f" Datos limpios: {filas_finales} registros disponibles.")
-    return df_limpio.reset_index(drop=True)#reinicia los índices del DataFrame. convierte el índice viejo en una columna nueva
-# NO guardes el índice viejo como columna, bórralo
+    filas_originales = len(df)  # cuenta cuántas filas tiene el dataset original
+
+    columnas_importantes = [  # lista de columnas donde no puede haber valores nulos
+     "Personality", "Introversion Score",
+     "Sensing Score", "Thinking Score", "Judging Score"]
+
+    mask = (  # crea una máscara booleana (True/False por fila)
+     df[columnas_importantes[0]].notnull() &  # verifica que Personality no sea nulo
+     df[columnas_importantes[1]].notnull() &  # verifica que Introversion Score no sea nulo
+     df[columnas_importantes[2]].notnull() &  # verifica que Sensing Score no sea nulo
+     df[columnas_importantes[3]].notnull() &  # verifica que Thinking Score no sea nulo
+     df[columnas_importantes[4]].notnull())    # verifica que Judging Score no sea nulo.
+
+    df_limpio = df.loc[mask].copy()  # filtra solo las filas válidas y crea una copia independiente
+
+    df_limpio["Personality"] = (  # accede a la columna Personality
+    df_limpio["Personality"].str.upper().str.strip())  # convierte a mayúsculas y elimina espacios.
+
+    cols_numericas = [  # lista de columnas que deben convertirse a números
+     "Introversion Score", "Sensing Score",
+     "Thinking Score", "Judging Score"]
+
+    for col in cols_numericas:  # recorre cada columna numérica
+         df_limpio[col] = pd.to_numeric(df_limpio[col], errors="coerce")  # convierte a número, errores → NaN
+
+    mask_numericos = (  # máscara para eliminar filas con valores NaN después de la conversión
+     df_limpio["Introversion Score"].notnull() &
+     df_limpio["Sensing Score"].notnull() &
+     df_limpio["Thinking Score"].notnull() &
+     df_limpio["Judging Score"].notnull())
+
+    df_limpio = df_limpio.loc[mask_numericos].copy()  # aplica la máscara y filtra filas válidas
+
+    filas_finales = len(df_limpio)  # cuenta cuántas filas quedaron después de limpiar
+
+    eliminadas = filas_originales - filas_finales  # calcula cuántas filas se eliminaron
+
+    print(f"Se eliminaron {eliminadas} filas con datos incompletos.")  # muestra cuántas filas se eliminaron
+
+    print(f"Datos limpios: {filas_finales} registros disponibles.")  # muestra cuántas filas quedaron
+
+    return df_limpio.reset_index(drop=True)  # devuelve el DataFrame limpio con índice reiniciado
