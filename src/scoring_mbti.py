@@ -47,11 +47,11 @@ def calcular_scores(preguntas, respuestas):
     Cada puntaje negativo indica afinidad al segundo polo (I, N, F, P).
 
     Parámetros:
-        preguntas (list): Lista de preguntas con dimension y direccion.
+        preguntas (list): Lista de preguntas  con dimension y direccion. ('pregunta', 'direccion', 'dimension' son claves)
         respuestas (list): Lista de respuestas en escala 1-5.
 
     Retorna:
-        dict: Puntajes netos por dimensión {'EI': x, 'SN': y, 'TF': z, 'JP': w}
+        scores (dict): Puntajes netos por dimensión {'EI': x, 'SN': y, 'TF': z, 'JP': w}
     """
     scores = {'EI': 0, 'SN': 0, 'TF': 0, 'JP': 0}
     
@@ -95,7 +95,7 @@ def calcular_afinidades(scores):
     afinidades = {}
     MAX = 10  # valor máximo posible de score
 
-    for dimension, score in scores.items():
+    for dimension, score in scores.items():  #recorre claves y valores de score
         polo1 = dimension[0]  # ej: 'E'
         polo2 = dimension[1]  # ej: 'I'
 
@@ -106,10 +106,10 @@ def calcular_afinidades(scores):
             score = -MAX
 
         # Convierto el score a porcentaje
-        porcentaje = ((score + MAX) / (2 * MAX)) * 100
+        porcentaje = ((score + MAX) / (2 * MAX)) * 100 #raris este calculo de porcentaje
 
         afinidades[polo1] = round(porcentaje, 1)
-        afinidades[polo2] = round(100 - porcentaje, 1)
+        afinidades[polo2] = round(100 - porcentaje, 1) #el porcentaje del polo dos es lo que le sobra al polo uno para llegar a 100 porq son complememtarios!!
 
     return afinidades
 
@@ -131,8 +131,8 @@ def determinar_tipo_mbti(scores):
     """
     tipo = ""
     
-    for dimension in DIMENSIONES:
-        score = scores[dimension]
+    for dimension in DIMENSIONES:   #DIMENSIONES  es una lista "global", esta por fuer de la funcion al ppio del codifo
+        score = scores[dimension]  #dimension es un string 
         polo1 = dimension[0]
         polo2 = dimension[1]
         
@@ -174,9 +174,16 @@ def obtener_top_tipos(scores, afinidades, top_n = 5):
             afinidades[tipo[1]] *
             afinidades[tipo[2]] *
             afinidades[tipo[3]]
-        ) ** 0.25  # promedio geométrico
+        ) ** 0.25  #sacopromedio geometrico (porque geometrico?? porque tiene mas en cuenta valores por separado. ej en doc)
         
         resultados.append((tipo, round(afin_tipo, 1))) # round rondea a decimales
     
-    resultados.sort(key=lambda x: x[1], reverse=True)
-    return resultados[:top_n] # REVISAR
+   
+    def obtener_porcentaje(tupla):
+            return tupla[1]
+    #ordena (con .sort() de mayor a menor (reverse = True) el porcentaje de cada tupla.
+    resultados.sort(key=obtener_porcentaje, reverse=True)  
+
+# Devolver solo los primeros top_n (5) resultados
+    return resultados[:top_n] 
+
