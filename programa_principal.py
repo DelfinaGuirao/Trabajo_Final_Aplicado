@@ -110,11 +110,37 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     
     if df is not None:
         print("📈 Analizando comparación con dataset...")
+    
+    try:
+
         distribucion = calcular_distribucion_mbti(df)
-        intereses = intereses_predominantes(df, tipo_predominante)
-        promedios = calcular_promedios_por_tipo(df, tipo_predominante)
-        rareza = calcular_rareza(df, tipo_predominante)
-        comparacion = comparar_usuario_vs_grupo(df, tipo_predominante, scores)
+
+        intereses = intereses_predominantes(
+            df,
+            tipo_predominante
+        )
+
+        promedios = calcular_promedios_por_tipo(
+            df,
+            tipo_predominante
+        )
+
+        rareza = calcular_rareza(
+            df,
+            tipo_predominante
+        )
+
+        comparacion = comparar_usuario_vs_grupo(
+            df,
+            tipo_predominante,
+            scores
+        )
+
+    except KeyError as error:
+
+        print(
+            f"⚠️ Error en el análisis del dataset: {error}"
+        )
     
     # --- VISUALIZACIONES ---
     print("🎨 Generando visualizaciones...")
