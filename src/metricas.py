@@ -19,7 +19,6 @@ Cálculo de afinidad porcentual:
     Por debajo del 50% hay afinidad al segundo polo (I, N, F, P).
 """
 
-from typing import List, Dict, Tuple
 
 
 CONVERSION_LIKERT = {
@@ -30,17 +29,17 @@ CONVERSION_LIKERT = {
     1: -2
 }
 
-POLOS_OPUESTOS = {
-    'E': 'I', 'I': 'E',
+#este diccionario no sirve para el codigo, pero si para entender cuales son los polos opuestos
+POLOS_OPUESTOS =  { 'E': 'I', 'I': 'E',
     'S': 'N', 'N': 'S',
     'T': 'F', 'F': 'T',
-    'J': 'P', 'P': 'J'
-}
+    'J': 'P', 'P': 'J' }
+
 
 DIMENSIONES = ['EI', 'SN', 'TF', 'JP']
 
 
-def calcular_scores(preguntas: List[Dict], respuestas: List[int]) -> Dict[str, int]:
+def calcular_scores(preguntas, respuestas):
     """
     Convierte las respuestas en puntajes brutos por dimensión.
 
@@ -48,18 +47,21 @@ def calcular_scores(preguntas: List[Dict], respuestas: List[int]) -> Dict[str, i
     Cada puntaje negativo indica afinidad al segundo polo (I, N, F, P).
 
     Parámetros:
-        preguntas (list): Lista de preguntas con dimension y direccion.
+        preguntas (list): Lista de preguntas  con dimension y direccion. ('pregunta', 'direccion', 'dimension' son claves)
         respuestas (list): Lista de respuestas en escala 1-5.
 
     Retorna:
-        dict: Puntajes netos por dimensión {'EI': x, 'SN': y, 'TF': z, 'JP': w}
+        scores (dict): Puntajes netos por dimensión {'EI': x, 'SN': y, 'TF': z, 'JP': w}
     """
     scores = {'EI': 0, 'SN': 0, 'TF': 0, 'JP': 0}
     
+    #zip: empareja cada pregunta con su respuesta. 
+    # si preguntas = [p1, p2] y respuestas = [3, 5], zip te da (p1,3) y (p2,5).
+
     for pregunta, respuesta in zip(preguntas, respuestas):
         dimension = pregunta['dimension']
         direccion = pregunta['direccion']
-        puntos = CONVERSION_LIKERT.get(respuesta, 0)
+        puntos = CONVERSION_LIKERT.get(respuesta, 0) #usa la funcion para convertir rtas en putaje likert
         
         primer_polo = dimension[0]
         if direccion == primer_polo:
@@ -70,42 +72,50 @@ def calcular_scores(preguntas: List[Dict], respuestas: List[int]) -> Dict[str, i
     return scores
 
 
-def calcular_afinidades(scores: Dict[str, int]) -> Dict[str, float]:
-    """
-    Convierte los puntajes brutos a afinidades porcentuales.
 
-    Asumiendo 5 preguntas por dimensión con valor máximo ±2 cada una,
-    el rango de puntaje es [-10, +10].
-    Se normaliza a [0%, 100%] donde 50% = neutral.
+
+def calcular_afinidades(scores): 
+    """"
+    Convierte los puntajes por dimensión en porcentajes de afinidad.
+
+    Normaliza cada puntaje del rango [-10, +10] al rango [0%, 100%].
+    Un 50% indica neutralidad entre los dos polos de una dimensión.
+    Por encima del 50% hay afinidad al primer polo (E, S, T, J).
+    Por debajo del 50% hay afinidad al segundo polo (I, N, F, P).
 
     Parámetros:
         scores (dict): Puntajes netos por dimensión.
+                       Ejemplo: {'EI': 6, 'SN': -3, 'TF': 0, 'JP': 4}
 
     Retorna:
-        dict: Afinidad porcentual para cada polo.
-              Ejemplo: {'E': 72.5, 'I': 27.5, 'S': 40.0, 'N': 60.0, ...}
+        dict: Porcentaje de afinidad para cada polo.
+              Ejemplo: {'E': 80.0, 'I': 20.0, 'S': 35.0, 'N': 65.0, ...}
     """
-    preguntas_por_dimension = 5
-    max_puntos = preguntas_por_dimension * 2  # = 10
 
     afinidades = {}
-    
-    for dimension, score in scores.items():
-        polo1 = dimension[0]
-        polo2 = dimension[1]
-        
-        score_clamped = max(-max_puntos, min(max_puntos, score))
-        
-        afinidad_polo1 = round(((score_clamped + max_puntos) / (2 * max_puntos)) * 100, 1)
-        afinidad_polo2 = round(100 - afinidad_polo1, 1)
-        
-        afinidades[polo1] = afinidad_polo1
-        afinidades[polo2] = afinidad_polo2
-    
+    MAX = 10  # valor máximo posible de score
+
+    for dimension, score in scores.items():  #recorre claves y valores de score
+        polo1 = dimension[0]  # ej: 'E'
+        polo2 = dimension[1]  # ej: 'I'
+
+        # Me aseguro que el score esté entre -10 y +10
+        if score > MAX:
+            score = MAX
+        elif score < -MAX:
+            score = -MAX
+
+        # Convierto el score a porcentaje
+        porcentaje = ((score + MAX) / (2 * MAX)) * 100 #raris este calculo de porcentaje
+
+        afinidades[polo1] = round(porcentaje, 1)
+        afinidades[polo2] = round(100 - porcentaje, 1) #el porcentaje del polo dos es lo que le sobra al polo uno para llegar a 100 porq son complememtarios!!
+
     return afinidades
 
 
-def determinar_tipo_mbti(scores: Dict[str, int]) -> str:
+
+def determinar_tipo_mbti(scores):
     """
     Determina el tipo MBTI de 4 letras con mayor afinidad.
 
@@ -121,8 +131,8 @@ def determinar_tipo_mbti(scores: Dict[str, int]) -> str:
     """
     tipo = ""
     
-    for dimension in DIMENSIONES:
-        score = scores[dimension]
+    for dimension in DIMENSIONES:   #DIMENSIONES  es una lista "global", esta por fuer de la funcion al ppio del codifo
+        score = scores[dimension]  #dimension es un string 
         polo1 = dimension[0]
         polo2 = dimension[1]
         
@@ -134,7 +144,7 @@ def determinar_tipo_mbti(scores: Dict[str, int]) -> str:
     return tipo
 
 
-def obtener_top_tipos(scores: Dict[str, int], afinidades: Dict[str, float], top_n: int = 5) -> List[Tuple[str, float]]:
+def obtener_top_tipos(scores, afinidades, top_n = 5):
     """
     Calcula los tipos MBTI más afines al usuario, con sus porcentajes.
 
@@ -164,9 +174,16 @@ def obtener_top_tipos(scores: Dict[str, int], afinidades: Dict[str, float], top_
             afinidades[tipo[1]] *
             afinidades[tipo[2]] *
             afinidades[tipo[3]]
-        ) ** 0.25  # promedio geométrico
+        ) ** 0.25  #sacopromedio geometrico (porque geometrico?? porque tiene mas en cuenta valores por separado. ej en doc)
         
-        resultados.append((tipo, round(afin_tipo, 1)))
+        resultados.append((tipo, round(afin_tipo, 1))) # round rondea a decimales
     
-    resultados.sort(key=lambda x: x[1], reverse=True)
-    return resultados[:top_n]
+   
+    def obtener_porcentaje(tupla):
+            return tupla[1]
+    #ordena (con .sort() de mayor a menor (reverse = True) el porcentaje de cada tupla.
+    resultados.sort(key=obtener_porcentaje, reverse=True)  
+
+# Devolver solo los primeros top_n (5) resultados
+    return resultados[:top_n] 
+
