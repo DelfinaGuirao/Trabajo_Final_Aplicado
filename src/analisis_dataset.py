@@ -15,8 +15,6 @@ Responsabilidades:
 """
 
 import pandas as pd
-import numpy as np
-from typing import Dict, List, Tuple, Optional
 
 
 def calcular_distribucion_mbti(df: pd.DataFrame) -> pd.Series:
@@ -59,116 +57,174 @@ def intereses_predominantes(df: pd.DataFrame, tipo: str) -> pd.Series:
     return intereses_pct
 
 
-def calcular_promedios_por_tipo(df: pd.DataFrame, tipo: str) -> Optional[Dict[str, float]]:
+def calcular_promedios_por_tipo(datos_mbti: pd.DataFrame, tipo_mbti: str):
     """
-    Calcula el promedio de cada score dimensional para el tipo indicado.
+    Calcula los puntajes promedio de las dimensiones MBTI
+    para un tipo de personalidad específico.
 
     Parámetros:
-        df (pd.DataFrame): Dataset MBTI limpio.
-        tipo (str): Tipo MBTI a analizar.
+        datos_mbti (pd.DataFrame):
+            DataFrame que contiene la información del dataset.
+
+        tipo_mbti (str):
+            Tipo MBTI que se desea analizar.
+            Ejemplos: "ENFP", "INTJ", "ENTP".
 
     Retorna:
-        dict: Promedios de scores {'Introversion': x, 'Sensing': y, ...}
-              o None si el tipo no existe en el dataset.
+        dict:
+            Diccionario con los promedios de cada dimensión.
+
+            Ejemplo:
+            {
+                "Introversion": 6.42,
+                "Sensing": 4.81,
+                "Thinking": 7.23,
+                "Judging": 5.94
+            }
+
+        None:
+            Si el tipo MBTI no existe en el dataset.
     """
+
     columnas_scores = {
-        'Introversion Score': 'Introversion',
-        'Sensing Score': 'Sensing',
-        'Thinking Score': 'Thinking',
-        'Judging Score': 'Judging'
+        "Introversion Score": "Introversion",
+        "Sensing Score": "Sensing",
+        "Thinking Score": "Thinking",
+        "Judging Score": "Judging"
     }
-    
-    subgrupo = df[df['Personality'] == tipo]
-    
-    if len(subgrupo) == 0:
+
+    personas_del_tipo = datos_mbti[
+        datos_mbti["Personality"] == tipo_mbti
+    ]
+
+    if len(personas_del_tipo) == 0:
         return None
-    
+
     promedios = {}
-    for col_original, nombre in columnas_scores.items():
-        if col_original in df.columns:
-            promedios[nombre] = round(subgrupo[col_original].mean(), 2)
-    
+
+    for columna_original, nombre_dimension in columnas_scores.items():
+
+        if columna_original in datos_mbti.columns:
+
+            promedios[nombre_dimension] = round(
+                personas_del_tipo[columna_original].mean(),
+                2
+            )
+
     return promedios
 
-
-def calcular_rareza(df: pd.DataFrame, tipo: str) -> Dict[str, object]:
+def calcular_rareza(datos_mbti, tipo_mbti):
     """
-    Calcula qué tan frecuente o raro es el tipo MBTI en el dataset.
-
-    Parámetros:
-        df (pd.DataFrame): Dataset MBTI limpio.
-        tipo (str): Tipo MBTI a analizar.
-
-    Retorna:
-        dict: Información de rareza con claves:
-              'porcentaje', 'cantidad', 'total', 'ranking', 'total_tipos'
+    Calcula la frecuencia de un tipo MBTI dentro del dataset.
     """
-    total = len(df)
-    distribucion = df['Personality'].value_counts()
-    
-    cantidad = distribucion.get(tipo, 0)
-    porcentaje = round((cantidad / total) * 100, 2) if total > 0 else 0
-    
+
+    total_personas = len(datos_mbti)
+
+    distribucion = datos_mbti["Personality"].value_counts()
+
+    cantidad_tipo = distribucion.get(tipo_mbti, 0)
+
+    porcentaje = 0
+
+    if total_personas > 0:
+        porcentaje = round(
+            (cantidad_tipo / total_personas) * 100,
+            2
+        )
+
     tipos_ordenados = distribucion.index.tolist()
-    ranking = tipos_ordenados.index(tipo) + 1 if tipo in tipos_ordenados else len(tipos_ordenados)
-    
+
+    if tipo_mbti in tipos_ordenados:
+        ranking = tipos_ordenados.index(tipo_mbti) + 1
+    else:
+        ranking = len(tipos_ordenados)
+
     return {
-        'porcentaje': porcentaje,
-        'cantidad': int(cantidad),
-        'total': total,
-        'ranking': ranking,
-        'total_tipos': len(tipos_ordenados)
+        "porcentaje": porcentaje,
+        "cantidad": int(cantidad_tipo),
+        "total": total_personas,
+        "ranking": ranking,
+        "total_tipos": len(tipos_ordenados)
     }
 
-
-def comparar_usuario_vs_grupo(
-    df: pd.DataFrame,
-    tipo: str,
-    scores_usuario: Dict[str, int]
-) -> Optional[Dict[str, Dict[str, float]]]:
+def comparar_usuario_vs_grupo(datos_mbti, tipo_mbti, scores_usuario):
     """
-    Compara los scores del usuario con el promedio de su grupo en el dataset.
-
-    El dataset usa una escala diferente (0-10 aprox), por lo que
-    los scores del usuario (escala -10 a +10) se normalizan a [0, 10].
+    Compara los scores del usuario con los promedios
+    de las personas que comparten su mismo tipo MBTI.
 
     Parámetros:
-        df (pd.DataFrame): Dataset MBTI limpio.
-        tipo (str): Tipo MBTI del usuario.
-        scores_usuario (dict): Scores brutos del usuario por dimensión.
+        datos_mbti (pd.DataFrame):
+            Dataset MBTI limpio.
+
+        tipo_mbti (str):
+            Tipo MBTI obtenido por el usuario.
+
+        scores_usuario (dict):
+            Puntajes obtenidos por el usuario en cada dimensión.
+
+            Ejemplo:
+            {
+                "EI": 6,
+                "SN": -2,
+                "TF": 4,
+                "JP": -8
+            }
 
     Retorna:
-        dict: Comparación usuario vs grupo con claves por dimensión.
+        dict:
+            Comparación entre el usuario y el promedio
+            de su grupo MBTI.
+
+        None:
+            Si el tipo MBTI no existe en el dataset.
     """
-    subgrupo = df[df['Personality'] == tipo]
-    
+
+    subgrupo = datos_mbti[
+        datos_mbti["Personality"] == tipo_mbti
+    ]
+
     if len(subgrupo) == 0:
         return None
-    
+
     mapeo_dimensiones = {
-        'EI': 'Introversion Score',
-        'SN': 'Sensing Score',
-        'TF': 'Thinking Score',
-        'JP': 'Judging Score'
+        "EI": "Introversion Score",
+        "SN": "Sensing Score",
+        "TF": "Thinking Score",
+        "JP": "Judging Score"
     }
-    
+
     comparacion = {}
-    
-    for dim, col in mapeo_dimensiones.items():
-        if col not in df.columns:
+
+    for dimension, columna in mapeo_dimensiones.items():
+
+        if columna not in datos_mbti.columns:
             continue
-        
-        score_usuario_raw = scores_usuario.get(dim, 0)
-        score_normalizado = round(((score_usuario_raw + 10) / 20) * 10, 2)
-        
-        promedio_grupo = round(subgrupo[col].mean(), 2)
-        desvio_grupo = round(subgrupo[col].std(), 2)
-        
-        comparacion[dim] = {
-            'usuario': score_normalizado,
-            'promedio_grupo': promedio_grupo,
-            'desvio_grupo': desvio_grupo,
-            'n_grupo': len(subgrupo)
+
+        score_usuario = scores_usuario.get(
+            dimension,
+            0
+        )
+
+        score_normalizado = round(
+            ((score_usuario + 10) / 20) * 10,
+            2
+        )
+
+        promedio_grupo = round(
+            subgrupo[columna].mean(),
+            2
+        )
+
+        desvio_grupo = round(
+            subgrupo[columna].std(),
+            2
+        )
+
+        comparacion[dimension] = {
+            "usuario": score_normalizado,
+            "promedio_grupo": promedio_grupo,
+            "desvio_grupo": desvio_grupo,
+            "n_grupo": len(subgrupo)
         }
-    
+
     return comparacion
