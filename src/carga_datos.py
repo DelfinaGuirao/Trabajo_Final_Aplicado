@@ -12,13 +12,13 @@ Responsabilidades:
 import pandas as pd #importamos libreria pandas. 
 
 
-COLUMNAS_ESPERADAS = [
+columnas_esperadas = [
     "Age", "Gender", "Education", "Interest",
     "Introversion Score", "Sensing Score",
     "Thinking Score", "Judging Score", "Personality"] #columnas obligatorias que debe tener el dataset”
 
 
-def cargar_dataset(ruta: str) -> pd.DataFrame: #parametro: string con el camino al archivo CSV, deuelve un Data frame. 
+def cargar_dataset(ruta): #parametro: string con el camino al archivo CSV, deuelve un Data frame. 
     """
     Carga el dataset desde un archivo CSV.
 
@@ -35,10 +35,12 @@ def cargar_dataset(ruta: str) -> pd.DataFrame: #parametro: string con el camino 
 
     try:
         df = pd.read_csv(ruta)
+        filas = df.shape[0] #cuando usas df.shape devuele una tupla (fila,columna) entonces de la tupla, la fila sera la pocion 0
+        columnas = df.shape[1]#(fila,columna) la columna sera la pocion 1
+        print(f"Archivo leído: {ruta} | Cantidad de filas: {filas} | Cantidad de columnas: {columnas}")
 
-        print(f"Archivo leído: {ruta} | Filas: {len(df)} | Columnas: {len(df.columns)}")
-
-        verificar_columnas(df)
+        chequeo=verificar_columnas(df)
+        print (chequeo) 
 
         return df
 
@@ -49,7 +51,7 @@ def cargar_dataset(ruta: str) -> pd.DataFrame: #parametro: string con el camino 
         raise ValueError(f"Error al cargar el CSV: {e}")
 
 
-def verificar_columnas(df: pd.DataFrame) -> None:
+def verificar_columnas(df): 
     """
     Verifica que el DataFrame contenga todas las columnas esperadas.
 
@@ -61,17 +63,17 @@ def verificar_columnas(df: pd.DataFrame) -> None:
     """
     faltantes = []
 
-    for col in COLUMNAS_ESPERADAS:
-        if col not in df.columns:
-            faltantes.append(col)
+    for columna in columnas_esperadas:
+        if columna not in df.columns:
+            faltantes.append(columna)
 
     if len(faltantes) > 0:
         raise ValueError(f"Columnas faltantes en el dataset: {faltantes}")
 
-    print("Columnas verificadas correctamente.")
+    return "Columnas verificadas correctamente."
 
 
-def limpiar_datos(df: pd.DataFrame) -> pd.DataFrame:
+def limpiar_datos(df):
     """
     Limpia el DataFrame eliminando filas con valores nulos
     en columnas críticas y normalizando tipos de datos.
@@ -88,18 +90,19 @@ def limpiar_datos(df: pd.DataFrame) -> pd.DataFrame:
      "Personality", "Introversion Score",
      "Sensing Score", "Thinking Score", "Judging Score"]
 
-    mask = (  # crea una máscara booleana (True/False por fila)
-     df[columnas_importantes[0]].notnull() &  # verifica que Personality no sea nulo
-     df[columnas_importantes[1]].notnull() &  # verifica que Introversion Score no sea nulo
-     df[columnas_importantes[2]].notnull() &  # verifica que Sensing Score no sea nulo
-     df[columnas_importantes[3]].notnull() &  # verifica que Thinking Score no sea nulo
-     df[columnas_importantes[4]].notnull())    # verifica que Judging Score no sea nulo.
-
-    df_limpio = df.loc[mask].copy()  # filtra solo las filas válidas y crea una copia independiente
-
-    df_limpio["Personality"] = (  # accede a la columna Personality
-    df_limpio["Personality"].str.upper().str.strip())  # convierte a mayúsculas y elimina espacios.
-
+#ME QUEDE ACAAAAAAAAA
+    columnas_importantes = [
+        "Personality",
+        "Introversion Score",
+        "Sensing Score",
+        "Thinking Score",
+        "Judging Score"]
+    # Elimina filas con valores nulos en columnas importantes
+    df_limpio = df.dropna(subset=columnas_importantes).copy()
+    
+    
+    df_limpio["Personality"] = df_limpio["Personality"].str.upper().str.strip()
+    
     cols_numericas = [  # lista de columnas que deben convertirse a números
      "Introversion Score", "Sensing Score",
      "Thinking Score", "Judging Score"]
