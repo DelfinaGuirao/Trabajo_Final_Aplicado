@@ -9,21 +9,7 @@ Incluye:
 - Otras utilidades de presentación
 """
 
-#YO BORRARIA LIMPIAR PANTALLA IMPORT OS E IMPORT PLATFORM. 
-import os
-#Permite interactuar con el sistema de archivos.
 
-import platform
-# detectar en qué sistema operativo está corriendo el programa (Windows, Mac, Linux)
-
-
-
-def limpiar_pantalla(): # Limpia la terminal. Detecta si estás en Windows (usa cls) o en Linux/Mac (usa clear).
-    """Limpia la pantalla de la terminal de forma multiplataforma."""
-    if platform.system() == "Windows":
-        os.system("cls")
-    else:
-        os.system("clear")
 
 
 def imprimir_banner(): 
