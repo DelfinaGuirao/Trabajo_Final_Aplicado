@@ -9,43 +9,28 @@ Incluye:
 - Otras utilidades de presentación
 """
 
-import os
-import platform
 
 
-def limpiar_pantalla() -> None:
-    """Limpia la pantalla de la terminal de forma multiplataforma."""
-    if platform.system() == "Windows":
-        os.system("cls")
-    else:
-        os.system("clear")
 
-
-def imprimir_banner() -> None:
+def imprimir_banner(): 
     """Imprime el banner de bienvenida del sistema."""
-    print("""
-╔══════════════════════════════════════════════════════╗
-║        🧠 EXPLORADOR DE AFINIDADES MBTI 🧠           ║
-║                                                      ║
-║     Proyecto Final — Universidad                     ║
-║     Sistema Exploratorio e Interactivo               ║
-║                                                      ║
-║  ⚠ USO EDUCATIVO Y EXPLORATORIO ÚNICAMENTE          ║
-╚══════════════════════════════════════════════════════╝
+    print(""" BIENVENIDOS AL EXPLORADOR DE PERSONALIDADES DE MBTI. Es de uso\
+          educativo y exploratorio unicamente. Presentado por estudientes de la UdeSa\
     """)
 
 
-def imprimir_separador(largo: int = 55) -> None:
+def imprimir_separador(largo: int = 55): #imprime una línea de guiones en la consola para separar visualmente secciones de texto.
     """
     Imprime una línea separadora horizontal.
 
     Parámetros:
         largo (int): Cantidad de caracteres de la línea.
     """
-    print("─" * largo)
+    print("─" * largo) # Repetir __ la cantidad de veces que indique el largo
 
 
-def formatear_porcentaje(valor: float, decimales: int = 1) -> str:
+def formatear_porcentaje(valor, decimales: int = 1):
+    #recibe un número y lo convierte en texto con el símbolo %
     """
     Formatea un número como porcentaje con símbolo.
 
@@ -56,4 +41,7 @@ def formatear_porcentaje(valor: float, decimales: int = 1) -> str:
     Retorna:
         str: Texto con formato (ej: '72.5%').
     """
-    return f"{round(valor, decimales):.{decimales}f}%"
+    numero= round(valor, decimales)
+    return f"{numero:.{decimales}f}%"
+
+#round() es una función que viene incluida en Python y sirve para redondear números.

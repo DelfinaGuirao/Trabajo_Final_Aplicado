@@ -26,13 +26,13 @@ from src.visualizaciones import (
     graficar_radar_usuario
 )
 from src.resultados import mostrar_resultados_finales, guardar_usuario
-from src.utilidades import limpiar_pantalla, imprimir_banner, imprimir_separador
+from src.utilidades import imprimir_banner, imprimir_separador
 
 
 def main():
     """Función principal que orquesta el flujo completo del sistema."""
     
-    limpiar_pantalla()
+    
     imprimir_banner()
     
     # --- DISCLAIMER ÉTICO ---
@@ -82,7 +82,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     respuestas = []
     
     for i, pregunta in enumerate(preguntas, 1):
-        limpiar_pantalla()
+       
         print(f"\nPregunta {i} de {len(preguntas)}")
         imprimir_separador(40)
         print(f"\n{pregunta['pregunta']}\n")
@@ -129,7 +129,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     graficar_radar_usuario(afinidades)
     
     # --- RESULTADOS FINALES ---
-    limpiar_pantalla()
+   
     mostrar_resultados_finales(
         nombre=nombre,
         tipo=tipo_predominante,

@@ -17,8 +17,8 @@ import matplotlib
 matplotlib.use('Agg')  # para entornos sin pantalla
 
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-import numpy as np
+import matplotlib.patches as mpatches #Importa una parte específica de matplotlib que sirve para crear formas y figuras 
+import numpy as np #NumPy es una librería de matemática.
 import os
 from typing import Dict, Optional
 
