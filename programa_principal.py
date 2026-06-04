@@ -10,7 +10,7 @@ import sys
 from src.carga_datos import cargar_dataset, limpiar_datos
 from src.preguntas import obtener_preguntas
 from src.validaciones import validar_edad, validar_genero, validar_respuesta
-from src.scoring_mbti import calcular_scores, calcular_afinidades, determinar_tipo_mbti
+from src.metricas import calcular_scores, calcular_afinidades, determinar_tipo_mbti
 from src.analisis_dataset import (
     calcular_distribucion_mbti,
     intereses_predominantes,
