@@ -33,7 +33,7 @@ def calcular_distribucion_mbti(df):
     return distribucion_pct
 
 
-def intereses_predominantes(df, tipo):
+def intereses_predominantes(df, tipo): #un grafico intereante seria una nube de palabras
     """
     Identifica los intereses más frecuentes en personas con el mismo tipo MBTI.
 
