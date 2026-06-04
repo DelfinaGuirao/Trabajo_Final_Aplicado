@@ -1,6 +1,6 @@
 """
 analisis_dataset.py
-===================
+
 Módulo de análisis descriptivo y estadístico del dataset MBTI.
 
 IMPORTANTE: El dataset es SINTÉTICO. Los análisis son exploratorios
@@ -17,7 +17,7 @@ Responsabilidades:
 import pandas as pd
 
 
-def calcular_distribucion_mbti(df: pd.DataFrame) -> pd.Series:
+def calcular_distribucion_mbti(df):
     """
     Calcula la distribución porcentual de tipos MBTI en el dataset.
 
@@ -25,7 +25,7 @@ def calcular_distribucion_mbti(df: pd.DataFrame) -> pd.Series:
         df (pd.DataFrame): Dataset MBTI limpio.
 
     Retorna:
-        pd.Series: Porcentaje de cada tipo MBTI, ordenado de mayor a menor.
+        distribucion_pct(pd.Series) : Porcentaje de cada tipo MBTI, ordenado de mayor a menor.
     """
     total = len(df)
     distribucion = df['Personality'].value_counts()
@@ -33,7 +33,7 @@ def calcular_distribucion_mbti(df: pd.DataFrame) -> pd.Series:
     return distribucion_pct
 
 
-def intereses_predominantes(df: pd.DataFrame, tipo: str) -> pd.Series:
+def intereses_predominantes(df, tipo):
     """
     Identifica los intereses más frecuentes en personas con el mismo tipo MBTI.
 
@@ -42,22 +42,25 @@ def intereses_predominantes(df: pd.DataFrame, tipo: str) -> pd.Series:
         tipo (str): Tipo MBTI a analizar (ej: 'ENTP').
 
     Retorna:
-        pd.Series: Frecuencia de intereses para ese tipo, ordenados.
+        intereses_pct(pd.Series): Frecuencia de intereses para ese tipo, ordenados.
     """
-    if 'Interest' not in df.columns:
-        return pd.Series(dtype='float64')
-    
-    subgrupo = df[df['Personality'] == tipo]
-    
+
+    if "Interest" not in df.columns:
+        raise KeyError("La columna 'Interest' no existe en el DataFrame.")
+
+    subgrupo = df[df["Personality"] == tipo]
+
     if len(subgrupo) == 0:
-        return pd.Series(dtype='float64')
-    
-    intereses = subgrupo['Interest'].value_counts()
-    intereses_pct = (intereses / len(subgrupo) * 100).round(1)
+        return None
+
+    intereses = subgrupo["Interest"].value_counts()
+
+    intereses_pct = (intereses / len(subgrupo) * 100).round(2)
+
     return intereses_pct
 
 
-def calcular_promedios_por_tipo(datos_mbti: pd.DataFrame, tipo_mbti: str):
+def calcular_promedios_por_tipo(datos_mbti, tipo_mbti):
     """
     Calcula los puntajes promedio de las dimensiones MBTI
     para un tipo de personalidad específico.
@@ -106,10 +109,7 @@ def calcular_promedios_por_tipo(datos_mbti: pd.DataFrame, tipo_mbti: str):
 
         if columna_original in datos_mbti.columns:
 
-            promedios[nombre_dimension] = round(
-                personas_del_tipo[columna_original].mean(),
-                2
-            )
+            promedios[nombre_dimension] = round(personas_del_tipo[columna_original].mean(), 2)
 
     return promedios
 
@@ -127,10 +127,7 @@ def calcular_rareza(datos_mbti, tipo_mbti):
     porcentaje = 0
 
     if total_personas > 0:
-        porcentaje = round(
-            (cantidad_tipo / total_personas) * 100,
-            2
-        )
+        porcentaje = round((cantidad_tipo / total_personas) * 100, 2)
 
     tipos_ordenados = distribucion.index.tolist()
 
@@ -179,9 +176,7 @@ def comparar_usuario_vs_grupo(datos_mbti, tipo_mbti, scores_usuario):
             Si el tipo MBTI no existe en el dataset.
     """
 
-    subgrupo = datos_mbti[
-        datos_mbti["Personality"] == tipo_mbti
-    ]
+    subgrupo = datos_mbti[datos_mbti["Personality"] == tipo_mbti]
 
     if len(subgrupo) == 0:
         return None
@@ -200,30 +195,15 @@ def comparar_usuario_vs_grupo(datos_mbti, tipo_mbti, scores_usuario):
         if columna not in datos_mbti.columns:
             continue
 
-        score_usuario = scores_usuario.get(
-            dimension,
-            0
-        )
+        score_usuario = scores_usuario.get(dimension, 0)
 
-        score_normalizado = round(
-            ((score_usuario + 10) / 20) * 10,
-            2
-        )
-
-        promedio_grupo = round(
-            subgrupo[columna].mean(),
-            2
-        )
-
-        desvio_grupo = round(
-            subgrupo[columna].std(),
-            2
-        )
+        score_normalizado = round(((score_usuario + 10) / 20) * 10, 2)
+        
+        promedio_grupo = round(subgrupo[columna].mean(),2)
 
         comparacion[dimension] = {
             "usuario": score_normalizado,
             "promedio_grupo": promedio_grupo,
-            "desvio_grupo": desvio_grupo,
             "n_grupo": len(subgrupo)
         }
 
