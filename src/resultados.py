@@ -14,7 +14,7 @@ import pandas as pd
 import os
 from datetime import datetime
 from typing import Dict, Optional
-from src.scoring_mbti import obtener_top_tipos
+from src.metricas import obtener_top_tipos
 from src.utilidades import imprimir_separador
 
 
