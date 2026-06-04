@@ -18,13 +18,7 @@ from src.analisis_dataset import (
     calcular_rareza,
     comparar_usuario_vs_grupo
 )
-from src.visualizaciones import (
-    graficar_distribucion_mbti,
-    graficar_intereses_por_tipo,
-    graficar_usuario_vs_promedio,
-    graficar_histograma_scores,
-    graficar_radar_usuario
-)
+
 from src.resultados import mostrar_resultados_finales, guardar_usuario
 from src.utilidades import imprimir_banner, imprimir_separador
 
@@ -142,17 +136,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
             f"⚠️ Error en el análisis del dataset: {error}"
         )
     
-    # --- VISUALIZACIONES ---
-    print("🎨 Generando visualizaciones...")
-    os.makedirs("outputs/graficos", exist_ok=True)
     
-    if df is not None and distribucion is not None:
-        graficar_distribucion_mbti(distribucion, tipo_predominante)
-        graficar_intereses_por_tipo(df, tipo_predominante)
-        graficar_usuario_vs_promedio(comparacion, tipo_predominante)
-    
-    graficar_histograma_scores(scores, afinidades)
-    graficar_radar_usuario(afinidades)
     
     # --- RESULTADOS FINALES ---
    

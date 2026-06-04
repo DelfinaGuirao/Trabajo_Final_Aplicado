@@ -2,6 +2,7 @@
 carga_datos.py
 ==============
 Unidad responsable de leer, validar y limpiar el dataset MBTI.
+Asume validez de la existencia de ciertas columnas
 
 Responsabilidades:
 - Leer el archivo CSV
@@ -10,12 +11,6 @@ Responsabilidades:
 """
 
 import pandas as pd #importamos libreria pandas. 
-
-
-columnas_esperadas = [
-    "Age", "Gender", "Education", "Interest",
-    "Introversion Score", "Sensing Score",
-    "Thinking Score", "Judging Score", "Personality"] #columnas obligatorias que debe tener el dataset”
 
 
 def cargar_dataset(ruta): #parametro: string con el camino al archivo CSV, deuelve un Data frame. 
@@ -39,9 +34,6 @@ def cargar_dataset(ruta): #parametro: string con el camino al archivo CSV, deuel
         columnas = df.shape[1]#(fila,columna) la columna sera la pocion 1
         print(f"Archivo leído: {ruta} | Cantidad de filas: {filas} | Cantidad de columnas: {columnas}")
 
-        chequeo=verificar_columnas(df)
-        print (chequeo) 
-
         return df
 
     except FileNotFoundError:
@@ -49,28 +41,6 @@ def cargar_dataset(ruta): #parametro: string con el camino al archivo CSV, deuel
 
     except Exception as e:
         raise ValueError(f"Error al cargar el CSV: {e}")
-
-
-def verificar_columnas(df): 
-    """
-    Verifica que el DataFrame contenga todas las columnas esperadas.
-
-    Parameters:
-        df (pd.DataFrame): DataFrame a verificar.
-
-    Raises:
-        ValueError: Si faltan columnas necesarias.
-    """
-    faltantes = []
-
-    for columna in columnas_esperadas:
-        if columna not in df.columns:
-            faltantes.append(columna)
-
-    if len(faltantes) > 0:
-        raise ValueError(f"Columnas faltantes en el dataset: {faltantes}")
-
-    return "Columnas verificadas correctamente."
 
 
 def limpiar_datos(df):
