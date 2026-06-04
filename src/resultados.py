@@ -13,12 +13,11 @@ Incluye:
 import pandas as pd
 import os
 from datetime import datetime
-from typing import Dict, Optional
 from src.metricas import obtener_top_tipos
 from src.utilidades import imprimir_separador
 
 
-DESCRIPCIONES_TIPOS = {
+descripciones_tipos = {
     'INTJ': "Estratega reflexivo/a. Tendencia a pensar en sistemas y planes a largo plazo.",
     'INTP': "Pensador/a lógico/a. Tendencia a analizar conceptos y teorías abstractas.",
     'ENTJ': "Líder decisivo/a. Tendencia a organizar y dirigir proyectos con visión.",
@@ -38,51 +37,40 @@ DESCRIPCIONES_TIPOS = {
 }
 
 
-def mostrar_resultados_finales(
-    nombre: str,
-    tipo: str,
-    afinidades: Dict[str, float],
-    scores: Dict[str, int],
-    distribucion=None,
-    intereses=None,
-    rareza=None,
-    comparacion=None
-) -> None:
+def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=None, intereses=None, rareza=None, comparacion=None):
     """
     Muestra el resumen completo de resultados en la consola.
 
     Incluye disclaimer ético, afinidades, descripción exploratoria,
     datos poblacionales e intereses del grupo.
     """
-    imprimir_separador()
-    print(f"\n🌟 RESULTADOS EXPLORATORIOS PARA {nombre.upper()}")
-    imprimir_separador()
     
-    print("\n⚠️  DISCLAIMER ÉTICO")
-    print("─" * 50)
+    print(f"\n RESULTADOS EXPLORATORIOS PARA {nombre.upper()}")
+    
+    print("\n DISCLAIMER ÉTICO")
+    
     print("Este sistema NO constituye una herramienta psicológica")
     print("clínica ni diagnóstica. Los resultados representan")
     print("AFINIDADES EXPLORATORIAS basadas en un dataset sintético.")
     print("El MBTI no tiene validez diagnóstica confirmada por")
     print("la psicología científica contemporánea.\n")
     
-    print("📌 TU TIPO CON MAYOR AFINIDAD")
-    print("─" * 50)
+    print("TU TIPO CON MAYOR AFINIDAD")
+
     print(f"  Tipo predominante: {tipo}")
-    descripcion = DESCRIPCIONES_TIPOS.get(tipo, "Perfil exploratorio.")
+    descripcion = descripciones_tipos.get(tipo, "Perfil exploratorio.")
     print(f"  Tendencia exploratoria: {descripcion}\n")
     
-    print("📊 AFINIDADES PORCENTUALES POR DIMENSIÓN")
-    print("─" * 50)
+    print("AFINIDADES PORCENTUALES POR DIMENSIÓN")
     
-    dimensiones_display = [
+    dimensiones = [
         ('E', 'I', 'Extroversión / Introversión'),
         ('S', 'N', 'Sensorial / Intuitivo'),
         ('T', 'F', 'Pensamiento / Sentimiento'),
         ('J', 'P', 'Juzgador / Perceptivo'),
     ]
     
-    for polo1, polo2, nombre_dim in dimensiones_display:
+    for polo1, polo2, nombre_dim in dimensiones:
         af1 = afinidades.get(polo1, 50)
         af2 = afinidades.get(polo2, 50)
         dominante = polo1 if af1 >= af2 else polo2
@@ -90,36 +78,36 @@ def mostrar_resultados_finales(
         barra = _generar_barra(af1)
         print(f"  {nombre_dim}")
         print(f"  {polo1} {barra} {polo2}")
-        print(f"  → Afinidad {dominante}: {porcentaje:.1f}%\n")
+        print(f"  Afinidad {dominante}: {porcentaje:.1f}%\n")
     
     top5 = obtener_top_tipos(scores, afinidades)
-    print("🏆 TOP 5 TIPOS MÁS COMPATIBLES CON TU PERFIL")
-    print("─" * 50)
+    print("TOP 5 TIPOS MÁS COMPATIBLES CON TU PERFIL")
+    
     for i, (t, pct) in enumerate(top5, 1):
-        marca = " ◀ tu tipo" if t == tipo else ""
+        marca = "- tu tipo" if t == tipo else ""
         print(f"  {i}. {t}: {pct:.1f}%{marca}")
     
     if rareza:
-        print("\n📈 TU PERFIL EN EL DATASET SINTÉTICO")
-        print("─" * 50)
+        print("\n TU PERFIL EN EL DATASET SINTÉTICO")
+        
         print(f"  Registros con tipo {tipo}: {rareza['cantidad']:,} de {rareza['total']:,}")
         print(f"  Representa el {rareza['porcentaje']}% del dataset")
         print(f"  Ranking de frecuencia: #{rareza['ranking']} de {rareza['total_tipos']} tipos")
         
         if rareza['ranking'] <= 4:
-            print(f"  📌 Es uno de los tipos más frecuentes en el dataset.")
+            print(f"  Es uno de los tipos más frecuentes en el dataset.")
         elif rareza['ranking'] >= rareza['total_tipos'] - 3:
-            print(f"  📌 Es uno de los tipos menos frecuentes en el dataset.")
+            print(f"  Es uno de los tipos menos frecuentes en el dataset.")
     
     if intereses is not None and len(intereses) > 0:
-        print(f"\n💡 INTERESES MÁS FRECUENTES EN PERSONAS CON TIPO {tipo}")
-        print("─" * 50)
+        print(f"\n INTERESES MÁS FRECUENTES EN PERSONAS CON TIPO {tipo}")
+        
         for interes, pct in intereses.head(4).items():
-            print(f"  • {interes}: {pct:.1f}%")
+            print(f"  {interes}: {pct:.1f}%")
     
-    print("\n" + "─" * 50)
-    print("📁 VISUALIZACIONES GENERADAS")
-    print("─" * 50)
+
+    print("VISUALIZACIONES GENERADAS")
+    
     print("  Ver carpeta: outputs/graficos/")
     print("  1. Distribución MBTI en el dataset")
     print("  2. Intereses por tipo")
@@ -127,17 +115,9 @@ def mostrar_resultados_finales(
     print("  4. Afinidades por polo")
     print("  5. Radar de afinidades")
     
-    imprimir_separador()
 
 
-def guardar_usuario(
-    nombre: str,
-    edad: int,
-    genero: str,
-    tipo: str,
-    afinidades: Dict[str, float],
-    scores: Dict[str, int]
-) -> None:
+def guardar_usuario(nombre: str, edad: int, genero: str, tipo: str, afinidades: Dict[str, float], scores: Dict[str, int]):
     """
     Guarda los resultados del usuario en el archivo data/usuarios.csv.
 
@@ -183,7 +163,7 @@ def guardar_usuario(
     df_final.to_csv(ruta, index=False)
 
 
-def _generar_barra(afinidad_polo1: float, largo: int = 20) -> str:
+def _generar_barra(afinidad_polo1, largo: int = 20):
     """
     Genera una barra ASCII que representa la distribución entre dos polos.
 
