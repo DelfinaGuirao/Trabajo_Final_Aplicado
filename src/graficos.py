@@ -1,3 +1,1 @@
-
-#Aca vamos a hacer los graficos 
-
+#aca vamos a poner los graficos 

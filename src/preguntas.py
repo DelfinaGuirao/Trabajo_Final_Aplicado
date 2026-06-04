@@ -19,13 +19,26 @@ Total: 20 preguntas (5 por dimensión).
 """
 
 
-def obtener_preguntas() -> list:
+def obtener_preguntas():
     """
     Retorna la lista completa de preguntas del test.
 
     Retorna:
         list[dict]: Lista de diccionarios con pregunta, dimension y direccion.
+    
     """
+    #Pregunta: es el texto que se le muestra al usuario en pantalla
+    
+    #Dimension: indica qué dimensión MBTI está midiendo esa pregunta
+    #"EI"  → mide Extroversión/Introversión
+    #"SN"  → mide Sensorial/Intuitivo
+    #"TF"  → mide Pensamiento/Sentimiento
+    #"JP"  → mide Juzgador/Perceptivo
+    
+    #Direccion: indica hacia qué polo apunta si el usuario responde alto (4 o 5)
+    #"E"  → si respondés 5, suma puntos hacia Extroversión
+#   "I"  → si respondés 5, suma puntos hacia Introversión
+    
     preguntas = [
 
         # ─── Dimensión E/I (Extroversión / Introversión) ───
