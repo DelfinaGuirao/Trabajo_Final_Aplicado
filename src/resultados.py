@@ -117,9 +117,17 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
     
 
 
-def guardar_usuario(nombre: str, edad: int, genero: str, tipo: str, afinidades: Dict[str, float], scores: Dict[str, int]):
+def guardar_usuario(
+    nombre,
+    edad,
+    genero,
+    tipo,
+    afinidades,
+    scores
+):
     """
-    Guarda los resultados del usuario en el archivo data/usuarios.csv.
+    Guarda los resultados del usuario en el archivo
+    data/usuarios.csv.
 
     Parámetros:
         nombre (str): Nombre o apodo del usuario.
@@ -129,51 +137,83 @@ def guardar_usuario(nombre: str, edad: int, genero: str, tipo: str, afinidades: 
         afinidades (dict): Afinidades porcentuales.
         scores (dict): Scores brutos.
     """
+
     os.makedirs("data", exist_ok=True)
+
     ruta = "data/usuarios.csv"
-    
+
     registro = {
-        'Fecha': datetime.now().strftime('%Y-%m-%d %H:%M'),
-        'Nombre': nombre,
-        'Edad': edad,
-        'Genero': genero,
-        'Tipo': tipo,
-        'Afinidad_E': afinidades.get('E', 0),
-        'Afinidad_I': afinidades.get('I', 0),
-        'Afinidad_S': afinidades.get('S', 0),
-        'Afinidad_N': afinidades.get('N', 0),
-        'Afinidad_T': afinidades.get('T', 0),
-        'Afinidad_F': afinidades.get('F', 0),
-        'Afinidad_J': afinidades.get('J', 0),
-        'Afinidad_P': afinidades.get('P', 0),
-        'Score_EI': scores.get('EI', 0),
-        'Score_SN': scores.get('SN', 0),
-        'Score_TF': scores.get('TF', 0),
-        'Score_JP': scores.get('JP', 0),
+        "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "Nombre": nombre,
+        "Edad": edad,
+        "Genero": genero,
+        "Tipo": tipo,
+        "Afinidad_E": afinidades.get("E", 0),
+        "Afinidad_I": afinidades.get("I", 0),
+        "Afinidad_S": afinidades.get("S", 0),
+        "Afinidad_N": afinidades.get("N", 0),
+        "Afinidad_T": afinidades.get("T", 0),
+        "Afinidad_F": afinidades.get("F", 0),
+        "Afinidad_J": afinidades.get("J", 0),
+        "Afinidad_P": afinidades.get("P", 0),
+        "Score_EI": scores.get("EI", 0),
+        "Score_SN": scores.get("SN", 0),
+        "Score_TF": scores.get("TF", 0),
+        "Score_JP": scores.get("JP", 0)
     }
-    
+
     df_nuevo = pd.DataFrame([registro])
-    
+
     if os.path.exists(ruta):
+
         df_existente = pd.read_csv(ruta)
-        df_final = pd.concat([df_existente, df_nuevo], ignore_index=True)
+
+        df_final = pd.concat(
+            [df_existente, df_nuevo],
+            ignore_index=True
+        )
+
     else:
+
         df_final = df_nuevo
-    
-    df_final.to_csv(ruta, index=False)
+
+    df_final.to_csv(
+        ruta,
+        index=False
+    )
 
 
-def _generar_barra(afinidad_polo1, largo: int = 20):
+def _generar_barra(
+    afinidad_polo1,
+    largo=20
+):
     """
-    Genera una barra ASCII que representa la distribución entre dos polos.
+    Genera una barra visual que representa
+    el porcentaje de afinidad de un polo.
 
     Parámetros:
-        afinidad_polo1 (float): Porcentaje del primer polo (0-100).
-        largo (int): Longitud total de la barra.
+        afinidad_polo1 (float):
+            Porcentaje del primer polo.
+
+        largo (int):
+            Cantidad de caracteres que tendrá
+            la barra.
 
     Retorna:
-        str: Barra ASCII como '████░░░░░░'.
+        str:
+            Barra formada por caracteres
+            llenos y vacíos.
     """
-    n_llenos = int(round(afinidad_polo1 / 100 * largo))
+
+    n_llenos = int(
+        round(
+            afinidad_polo1 / 100 * largo
+        )
+    )
+
     n_vacios = largo - n_llenos
-    return '█' * n_llenos + '░' * n_vacios
+
+    return (
+        "█" * n_llenos
+        + "░" * n_vacios
+    )
