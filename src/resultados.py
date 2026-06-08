@@ -4,8 +4,7 @@ Módulo responsable de mostrar resultados finales y guardar datos del usuario.
 Incluye:
 - Disclaimer ético obligatorio
 - Afinidades del usuario
-- Comparación con dataset
-- Guardado en CSV
+- Comparacion con dataset
 """
 
 import pandas as pd
@@ -90,17 +89,13 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
             marca= ""
         print(f"  {i}. {t}: {pct:.1f}%{marca}")
     
-    
-    print("\n TU PERFIL EN EL DATASET")
+    if rareza is not None:
+        print("\n TU PERFIL EN EL DATASET")
         
-    print(f"  Registros con tipo {tipo}: {rareza['cantidad']:,} de {rareza['total']:,}")
-    print(f"  Representa el {rareza['porcentaje']}% del dataset")
-    print(f"  Ranking de frecuencia: #{rareza['ranking']} de {rareza['total_tipos']} tipos")
+        print(f"  Registros con tipo {tipo}: {rareza['cantidad']:,} de {rareza['total']:,}")
+        print(f"  Representa el {rareza['porcentaje']}% del dataset")
+        print(f"  Ranking de frecuencia: #{rareza['ranking']} de {rareza['total_tipos']} tipos")
         
-    if rareza['ranking'] <= 4:
-        print("  Es uno de los tipos más frecuentes en el dataset.")
-    elif rareza['ranking'] >= rareza['total_tipos'] - 3:
-        print("  Es uno de los tipos menos frecuentes en el dataset.")
     
     if intereses is not None and len(intereses) > 0:
         print(f"\n INTERESES MÁS FRECUENTES EN PERSONAS CON TIPO {tipo}")

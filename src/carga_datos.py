@@ -1,6 +1,4 @@
 """
-carga_datos.py
-==============
 Unidad responsable de leer, validar y limpiar el dataset MBTI.
 Asume validez de la existencia de ciertas columnas
 

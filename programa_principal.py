@@ -1,6 +1,6 @@
 """
 MBTI Exploratorio - Proyecto Final
-====================================
+
 Sistema interactivo de exploración de afinidades MBTI.
 USO EDUCATIVO Y EXPLORATORIO ÚNICAMENTE.
 """
@@ -90,7 +90,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         respuestas.append(resp)
     
     # --- CÁLCULO DE SCORES ---
-    print("\n⚙️  Calculando tus afinidades...")
+    print("\n Calculando tus afinidades...")
     scores = calcular_scores(preguntas, respuestas)
     afinidades = calcular_afinidades(scores)
     tipo_predominante = determinar_tipo_mbti(scores)
@@ -114,9 +114,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
             tipo_predominante
         )
 
-        promedios = calcular_promedios_por_tipo(
-            df,
-            tipo_predominante
+        promedios = calcular_promedios_por_tipo(df, tipo_predominante
         )
 
         rareza = calcular_rareza(

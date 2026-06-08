@@ -1,7 +1,4 @@
 """
-
-metricas.py
-
 Módulo que transforma respuestas en puntajes MBTI y calcula afinidades.
 
 Lógica del archivo:

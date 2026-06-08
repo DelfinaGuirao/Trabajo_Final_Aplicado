@@ -1,6 +1,4 @@
 """
-utilidades.py
-=============
 Funciones auxiliares de uso general en el proyecto.
 Se ouede llegar a agregar en el programa principal y borrarlo
 
