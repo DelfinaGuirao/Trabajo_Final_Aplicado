@@ -1,6 +1,4 @@
 """
-resultados.py
-=============
 Módulo responsable de mostrar resultados finales y guardar datos del usuario.
 
 Incluye:
@@ -11,10 +9,7 @@ Incluye:
 """
 
 import pandas as pd
-import os
-from datetime import datetime
 from src.metricas import obtener_top_tipos
-from src.utilidades import imprimir_separador
 
 
 descripciones_tipos = {
@@ -71,33 +66,41 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
     ]
     
     for polo1, polo2, nombre_dim in dimensiones:
+        
         af1 = afinidades.get(polo1, 50)
         af2 = afinidades.get(polo2, 50)
-        dominante = polo1 if af1 >= af2 else polo2
+        
+        if af1 >= af2:
+            dominante= polo1
+        else:
+            dominante= polo2
+            
         porcentaje = max(af1, af2)
-        barra = _generar_barra(af1)
-        print(f"  {nombre_dim}")
-        print(f"  {polo1} {barra} {polo2}")
+        
+        print(nombre_dim)
         print(f"  Afinidad {dominante}: {porcentaje:.1f}%\n")
     
     top5 = obtener_top_tipos(scores, afinidades)
     print("TOP 5 TIPOS MÁS COMPATIBLES CON TU PERFIL")
     
     for i, (t, pct) in enumerate(top5, 1):
-        marca = "- tu tipo" if t == tipo else ""
+        if t == tipo:
+            marca = "- tu tipo" 
+        else:
+            ""
         print(f"  {i}. {t}: {pct:.1f}%{marca}")
     
     if rareza:
-        print("\n TU PERFIL EN EL DATASET SINTÉTICO")
+        print("\n TU PERFIL EN EL DATASET")
         
         print(f"  Registros con tipo {tipo}: {rareza['cantidad']:,} de {rareza['total']:,}")
         print(f"  Representa el {rareza['porcentaje']}% del dataset")
         print(f"  Ranking de frecuencia: #{rareza['ranking']} de {rareza['total_tipos']} tipos")
         
         if rareza['ranking'] <= 4:
-            print(f"  Es uno de los tipos más frecuentes en el dataset.")
+            print("  Es uno de los tipos más frecuentes en el dataset.")
         elif rareza['ranking'] >= rareza['total_tipos'] - 3:
-            print(f"  Es uno de los tipos menos frecuentes en el dataset.")
+            print("  Es uno de los tipos menos frecuentes en el dataset.")
     
     if intereses is not None and len(intereses) > 0:
         print(f"\n INTERESES MÁS FRECUENTES EN PERSONAS CON TIPO {tipo}")
@@ -113,107 +116,5 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
     print("  2. Intereses por tipo")
     print("  3. Tu perfil vs promedio del grupo")
     print("  4. Afinidades por polo")
-    print("  5. Radar de afinidades")
+    print("  5. Radar de afinidades") #yo lo sacaria
     
-
-
-def guardar_usuario(
-    nombre,
-    edad,
-    genero,
-    tipo,
-    afinidades,
-    scores
-):
-    """
-    Guarda los resultados del usuario en el archivo
-    data/usuarios.csv.
-
-    Parámetros:
-        nombre (str): Nombre o apodo del usuario.
-        edad (int): Edad del usuario.
-        genero (str): Género del usuario.
-        tipo (str): Tipo MBTI predominante.
-        afinidades (dict): Afinidades porcentuales.
-        scores (dict): Scores brutos.
-    """
-
-    os.makedirs("data", exist_ok=True)
-
-    ruta = "data/usuarios.csv"
-
-    registro = {
-        "Fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
-        "Nombre": nombre,
-        "Edad": edad,
-        "Genero": genero,
-        "Tipo": tipo,
-        "Afinidad_E": afinidades.get("E", 0),
-        "Afinidad_I": afinidades.get("I", 0),
-        "Afinidad_S": afinidades.get("S", 0),
-        "Afinidad_N": afinidades.get("N", 0),
-        "Afinidad_T": afinidades.get("T", 0),
-        "Afinidad_F": afinidades.get("F", 0),
-        "Afinidad_J": afinidades.get("J", 0),
-        "Afinidad_P": afinidades.get("P", 0),
-        "Score_EI": scores.get("EI", 0),
-        "Score_SN": scores.get("SN", 0),
-        "Score_TF": scores.get("TF", 0),
-        "Score_JP": scores.get("JP", 0)
-    }
-
-    df_nuevo = pd.DataFrame([registro])
-
-    if os.path.exists(ruta):
-
-        df_existente = pd.read_csv(ruta)
-
-        df_final = pd.concat(
-            [df_existente, df_nuevo],
-            ignore_index=True
-        )
-
-    else:
-
-        df_final = df_nuevo
-
-    df_final.to_csv(
-        ruta,
-        index=False
-    )
-
-
-def _generar_barra(
-    afinidad_polo1,
-    largo=20
-):
-    """
-    Genera una barra visual que representa
-    el porcentaje de afinidad de un polo.
-
-    Parámetros:
-        afinidad_polo1 (float):
-            Porcentaje del primer polo.
-
-        largo (int):
-            Cantidad de caracteres que tendrá
-            la barra.
-
-    Retorna:
-        str:
-            Barra formada por caracteres
-            llenos y vacíos.
-    """
-
-    n_llenos = int(
-        round(
-            afinidad_polo1 / 100 * largo
-        )
-    )
-
-    n_vacios = largo - n_llenos
-
-    return (
-        "█" * n_llenos
-        + "░" * n_vacios
-    )

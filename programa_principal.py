@@ -19,7 +19,7 @@ from src.analisis_dataset import (
     comparar_usuario_vs_grupo
 )
 
-from src.resultados import mostrar_resultados_finales, guardar_usuario
+from src.resultados import mostrar_resultados_finales
 from src.utilidades import imprimir_banner, imprimir_separador
 
 
@@ -151,16 +151,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         comparacion=comparacion
     )
     
-    # --- GUARDADO OPCIONAL ---
-    imprimir_separador()
-    guardar = input("\n¿Querés guardar tus resultados? [s/n]: ").strip().lower()
-    if guardar == 's':
-        guardar_usuario(nombre, edad, genero, tipo_predominante, afinidades, scores)
-        print("✅ Resultados guardados en data/usuarios.csv")
-    
-    print("\n¡Gracias por explorar tus afinidades MBTI! 🌟")
-    print("Recordá: esto es una exploración lúdica, ¡no un diagnóstico!")
-    imprimir_separador()
+   
 
 
 if __name__ == "__main__":
