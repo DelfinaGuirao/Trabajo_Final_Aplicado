@@ -87,20 +87,20 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
         if t == tipo:
             marca = "- tu tipo" 
         else:
-            ""
+            marca= ""
         print(f"  {i}. {t}: {pct:.1f}%{marca}")
     
-    if rareza:
-        print("\n TU PERFIL EN EL DATASET")
+    
+    print("\n TU PERFIL EN EL DATASET")
         
-        print(f"  Registros con tipo {tipo}: {rareza['cantidad']:,} de {rareza['total']:,}")
-        print(f"  Representa el {rareza['porcentaje']}% del dataset")
-        print(f"  Ranking de frecuencia: #{rareza['ranking']} de {rareza['total_tipos']} tipos")
+    print(f"  Registros con tipo {tipo}: {rareza['cantidad']:,} de {rareza['total']:,}")
+    print(f"  Representa el {rareza['porcentaje']}% del dataset")
+    print(f"  Ranking de frecuencia: #{rareza['ranking']} de {rareza['total_tipos']} tipos")
         
-        if rareza['ranking'] <= 4:
-            print("  Es uno de los tipos más frecuentes en el dataset.")
-        elif rareza['ranking'] >= rareza['total_tipos'] - 3:
-            print("  Es uno de los tipos menos frecuentes en el dataset.")
+    if rareza['ranking'] <= 4:
+        print("  Es uno de los tipos más frecuentes en el dataset.")
+    elif rareza['ranking'] >= rareza['total_tipos'] - 3:
+        print("  Es uno de los tipos menos frecuentes en el dataset.")
     
     if intereses is not None and len(intereses) > 0:
         print(f"\n INTERESES MÁS FRECUENTES EN PERSONAS CON TIPO {tipo}")
