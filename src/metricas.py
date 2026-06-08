@@ -1,22 +1,24 @@
 """
+
+metricas.py
+
 Módulo que transforma respuestas en puntajes MBTI y calcula afinidades.
 
-Lógica de scoring:
+Lógica del archivo:
     Cada pregunta tiene una "dirección" (polo al que apunta una respuesta alta).
     La conversión de escala Likert (1-5) a puntos es:
-        5 → +2  (Muy de acuerdo = mucho hacia el polo indicado)
+        5 → +2  (Muy de acuerdo --> mucho hacia el polo indicado)
         4 → +1  (De acuerdo)
         3 →  0  (Neutral)
-        2 → -1  (En desacuerdo = hacia el polo opuesto)
-        1 → -2  (Muy en desacuerdo = fuertemente hacia el polo opuesto)
+        2 → -1  (En desacuerdo --> hacia el polo opuesto)
+        1 → -2  (Muy en desacuerdo -->  mucho hacia el polo opuesto)
 
 Cálculo de afinidad porcentual:
-    Se normaliza el puntaje neto de cada dimensión al rango [0%, 100%].
-    Un 50% indica neutralidad perfecta entre ambos polos.
-    Por encima del 50% hay afinidad al primer polo (E, S, T, J).
-    Por debajo del 50% hay afinidad al segundo polo (I, N, F, P).
+    Se transforma el puntaje neto de cada dimension a una escala porcentual de 0% a 100%.
+    - Un 50% significa que hay neutralidad  entre ambos polos.
+    - Por encima del 50% hay afinidad al primer polo (E, S, T, J).
+    - Por debajo del 50% hay afinidad al segundo polo (I, N, F, P).
 """
-
 
 
 CONVERSION_LIKERT = {
@@ -24,15 +26,7 @@ CONVERSION_LIKERT = {
     4: +1,
     3:  0,
     2: -1,
-    1: -2
-}
-
-#este diccionario no sirve para el codigo, pero si para entender cuales son los polos opuestos
-POLOS_OPUESTOS =  { 'E': 'I', 'I': 'E',
-    'S': 'N', 'N': 'S',
-    'T': 'F', 'F': 'T',
-    'J': 'P', 'P': 'J' }
-
+    1: -2}
 
 DIMENSIONES = ['EI', 'SN', 'TF', 'JP']
 
@@ -49,9 +43,9 @@ def calcular_scores(preguntas, respuestas):
         respuestas (list): Lista de respuestas en escala 1-5.
 
     Retorna:
-        scores (dict): Puntajes netos por dimensión {'EI': x, 'SN': y, 'TF': z, 'JP': w}
+        puntajes (dict): Puntajes netos por dimensión {'EI': x, 'SN': y, 'TF': z, 'JP': w}
     """
-    scores = {'EI': 0, 'SN': 0, 'TF': 0, 'JP': 0}
+    puntajes = {'EI': 0, 'SN': 0, 'TF': 0, 'JP': 0}
     
     #zip: empareja cada pregunta con su respuesta. 
     # si preguntas = [p1, p2] y respuestas = [3, 5], zip te da (p1,3) y (p2,5).
@@ -63,16 +57,15 @@ def calcular_scores(preguntas, respuestas):
         
         primer_polo = dimension[0]
         if direccion == primer_polo:
-            scores[dimension] += puntos
+            puntajes[dimension] += puntos
         else:
-            scores[dimension] -= puntos
+            puntajes[dimension] -= puntos
     
-    return scores
+    return puntajes
 
 
 
-
-def calcular_afinidades(scores): 
+def calcular_afinidades(puntajes): 
     """"
     Convierte los puntajes por dimensión en porcentajes de afinidad.
 
@@ -93,18 +86,18 @@ def calcular_afinidades(scores):
     afinidades = {}
     MAX = 10  # valor máximo posible de score
 
-    for dimension, score in scores.items():  #recorre claves y valores de score
+    for dimension, puntaje in puntajes.items():  #recorre claves y valores de score
         polo1 = dimension[0]  # ej: 'E'
         polo2 = dimension[1]  # ej: 'I'
 
         # Me aseguro que el score esté entre -10 y +10
-        if score > MAX:
-            score = MAX
-        elif score < -MAX:
-            score = -MAX
+        if puntaje > MAX:
+            puntaje = MAX
+        elif puntaje < -MAX:
+            puntaje = -MAX
 
         # Convierto el score a porcentaje
-        porcentaje = ((score + MAX) / (2 * MAX)) * 100 #raris este calculo de porcentaje
+        porcentaje = ((puntaje + MAX) / (2 * MAX)) * 100 #raris este calculo de porcentaje
 
         afinidades[polo1] = round(porcentaje, 1)
         afinidades[polo2] = round(100 - porcentaje, 1) #el porcentaje del polo dos es lo que le sobra al polo uno para llegar a 100 porq son complememtarios!!
@@ -113,16 +106,16 @@ def calcular_afinidades(scores):
 
 
 
-def determinar_tipo_mbti(scores):
+def determinar_tipo_mbti(puntajes):
     """
     Determina el tipo MBTI de 4 letras con mayor afinidad.
 
     Regla: Para cada dimensión, se elige el polo con mayor afinidad.
-    En caso de empate exacto (score=0), se elige el segundo polo
+    En caso de empate exacto (puntaje=0), se elige el segundo polo
     por convención (I, N, F, P).
 
     Parámetros:
-        scores (dict): Puntajes netos por dimensión.
+        puntajes (dict): Puntajes netos por dimensión.
 
     Retorna:
         str: Tipo MBTI de 4 letras (ej: 'ENTP', 'ISFJ', etc.)
@@ -130,11 +123,11 @@ def determinar_tipo_mbti(scores):
     tipo = ""
     
     for dimension in DIMENSIONES:   #DIMENSIONES  es una lista "global", esta por fuer de la funcion al ppio del codifo
-        score = scores[dimension]  #dimension es un string 
+        puntaje = puntajes[dimension]  #dimension es un string 
         polo1 = dimension[0]
         polo2 = dimension[1]
         
-        if score > 0:
+        if puntaje > 0:
             tipo += polo1
         else:
             tipo += polo2
@@ -142,7 +135,7 @@ def determinar_tipo_mbti(scores):
     return tipo
 
 
-def obtener_top_tipos(scores, afinidades, top_n = 5):
+def obtener_top_tipos(puntajes, afinidades, top_n = 5):
     """
     Calcula los tipos MBTI más afines al usuario, con sus porcentajes.
 
