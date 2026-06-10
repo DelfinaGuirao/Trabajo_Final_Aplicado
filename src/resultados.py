@@ -103,8 +103,8 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
         for interes, pct in intereses.head(4).items():
             print(f"  {interes}: {pct:.1f}%")
     
-
-    print("VISUALIZACIONES GENERADAS")
+    
+    print("\n VISUALIZACIONES GENERADAS")
     
     print("  Ver carpeta: outputs/graficos/")
     print("  1. Distribución MBTI en el dataset")

@@ -8,13 +8,10 @@ Incluye:
 - Otras utilidades de presentación
 """
 
-
-
-
 def imprimir_banner(): 
     """Imprime el banner de bienvenida del sistema."""
-    print(""" BIENVENIDOS AL EXPLORADOR DE PERSONALIDADES DE MBTI. Es de uso\
-          educativo y exploratorio unicamente. Presentado por estudientes de la UdeSa\
+    print(""" BIENVENIDOS AL EXPLORADOR DE PERSONALIDADES DE MBTI. Es de uso\n
+          educativo y exploratorio unicamente. Presentado por estudientes de la UdeSa\n
     IMPORTANTE: no es el test oficial del MBTI, simplemente es una inspiracion del mismo""")
 
 

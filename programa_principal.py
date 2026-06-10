@@ -1,6 +1,4 @@
 """
-MBTI Exploratorio - Proyecto Final
-====================================
 Sistema interactivo de exploración de afinidades MBTI.
 USO EDUCATIVO Y EXPLORATORIO ÚNICAMENTE.
 """
@@ -18,20 +16,19 @@ from src.analisis_dataset import (
     comparar_usuario_vs_grupo
 )
 
-from src.resultados import mostrar_resultados_finales, guardar_usuario
+from src.resultados import mostrar_resultados_finales
 from src.utilidades import imprimir_banner, imprimir_separador
 
 
 def main():
     """Función principal que orquesta el flujo completo del sistema."""
-    
-    
+   
     imprimir_banner()
     
     # --- DISCLAIMER ÉTICO ---
     print("\n AVISO IMPORTANTE")
     imprimir_separador()
-    print("""Este sistema NO constituye una herramienta psicológica clínica ni diagnóstica.
+    print("""Este sistema NO constituye una herramienta psicológica clínica ni diagnóstica. 
 Los resultados representan AFINIDADES EXPLORATORIAS basadas en un dataset sintético.
 El MBTI es un marco de referencia popular, no un instrumento clínico validado.
 Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóstico.\n""")
@@ -91,7 +88,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         respuestas.append(resp)
     
     # --- CÁLCULO DE SCORES ---
-    print("\n⚙️  Calculando tus afinidades...")
+    print("\n Calculando tus afinidades...")
     scores = calcular_scores(preguntas, respuestas)
     afinidades = calcular_afinidades(scores)
     tipo_predominante = determinar_tipo_mbti(scores)
@@ -112,15 +109,10 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
 
             intereses = intereses_predominantes(df, tipo_predominante)
 
-<<<<<<< HEAD
-        promedios = calcular_promedios_por_tipo(
-            df,
-            tipo_predominante
-        )
-=======
             promedios = calcular_promedios_por_tipo(df, tipo_predominante)
->>>>>>> 2705341bc3abd6371df69f24ce5ba4de8609c90e
-
+            
+            promedios = calcular_promedios_por_tipo(df, tipo_predominante)
+            
             rareza = calcular_rareza(df, tipo_predominante)
 
             comparacion = comparar_usuario_vs_grupo(df, tipo_predominante, scores)
@@ -144,21 +136,5 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         comparacion=comparacion 
     )
     
-<<<<<<< HEAD
-   
-=======
-    # --- GUARDADO OPCIONAL ---
-    imprimir_separador()
-    guardar = input("\n¿Querés guardar tus resultados? [s/n]: ").strip().lower()
-    if guardar == 's':
-        guardar_usuario(nombre, edad, genero, tipo_predominante, afinidades, scores)
-        print("✅ Resultados guardados en data/usuarios.csv")
-    
-    print("\n¡Gracias por explorar tus afinidades MBTI! 🌟")
-    print("Recordá: esto es una exploración lúdica, ¡no un diagnóstico!")
-    imprimir_separador()
+if __name__ == "__main__": main()
 
-
-if __name__ == "__main__":
-    main()
->>>>>>> 4837b2be959ec38e9cc8b152ec3c4a4ecd2699e5
