@@ -109,7 +109,6 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
     print("  Ver carpeta: outputs/graficos/")
     print("  1. Distribución MBTI en el dataset")
     print("  2. Intereses por tipo")
-    print("  3. Tu perfil vs promedio del grupo")
-    print("  4. Afinidades por polo")
-    print("  5. Radar de afinidades") #yo lo sacaria
+    print("  3. Afinidades por polo")
+
     
