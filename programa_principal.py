@@ -40,12 +40,14 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     # --- CARGA DEL DATASET ---
     print("\n Cargando dataset...")
     try:
-        df_raw = cargar_dataset("data/dataset_mbti.csv")
-        df = limpiar_datos(df_raw)
+        df_inicial = cargar_dataset("data/dataset_mbti.csv")
+        df = limpiar_datos(df_inicial)
         print(f"Dataset cargado: {len(df)} registros disponibles para comparación.")
+        
     except FileNotFoundError:
         print("Dataset no encontrado. Se usarán datos simulados para comparación.")
         df = None
+        
     except Exception as e:
         print(f"Error al cargar dataset: {e}. Continuando sin datos comparativos.")
         df = None
@@ -53,9 +55,9 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     imprimir_separador()
     
     # --- DATOS DEMOGRÁFICOS ---
-    print("\n DATOS DEMOGRÁFICOS (opcionales, para comparación poblacional)")
+    print("\n DATOS DEMOGRÁFICOS") #puramente diseño
     
-    nombre = input("¿Cuál es tu nombre o apodo? ").strip() or "Explorador/a"
+    nombre = input("¿Cuál es tu nombre o apodo? ").strip() or "UsuarioDesconocido" 
     edad = validar_edad()
     genero = validar_genero()
     
@@ -71,10 +73,10 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     print("  5 = Muy de acuerdo\n")
     input("Presioná ENTER para empezar...")
     
-    preguntas = obtener_preguntas()
-    respuestas = []
+    preguntas = obtener_preguntas() #trae la lista con diccionarios con la pregunta, dimension y direccion
+    respuestas = [] #carga el valor que le da el usuario a cada pregunta
     
-    for i, pregunta in enumerate(preguntas, 1):
+    for i, pregunta in enumerate(preguntas, 1): #arranque a contar las preguntas desde el 1
        
         print(f"\nPregunta {i} de {len(preguntas)}")
         imprimir_separador(40)
@@ -136,7 +138,3 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     )
     
    
-
-
-if __name__ == "__main__":
-    main()
