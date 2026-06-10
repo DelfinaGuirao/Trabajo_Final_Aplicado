@@ -136,5 +136,5 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         comparacion=comparacion 
     )
     
-if __name__ == "__main__": main()
+main()
 
