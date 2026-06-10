@@ -1,6 +1,4 @@
 """
-carga_datos.py
-==============
 Unidad responsable de leer, validar y limpiar el dataset MBTI.
 Asume validez de la existencia de ciertas columnas
 
@@ -54,46 +52,46 @@ def limpiar_datos(df):
     Returns:
         pd.DataFrame: DataFrame limpio y listo para usar.
     """
-    filas_originales = len(df)  # cuenta cuántas filas tiene el dataset original
 
-    columnas_importantes = [  # lista de columnas donde no puede haber valores nulos
-     "Personality", "Introversion Score",
+# lista de columnas donde no puede haber valores nulos
+    columnas_importantes = [ "Personality", "Introversion Score",
      "Sensing Score", "Thinking Score", "Judging Score"]
 
-#ME QUEDE ACAAAAAAAAA
-    columnas_importantes = [
-        "Personality",
-        "Introversion Score",
-        "Sensing Score",
-        "Thinking Score",
-        "Judging Score"]
     # Elimina filas con valores nulos en columnas importantes
     df_limpio = df.dropna(subset=columnas_importantes).copy()
+    #df.dropna(subset=columnas_importantes) nuevo DataFrame. se eliminaron las filas que tienen algún NaN en las columnas indicadas.
+    #copy() crea una copia independiente al  DataFrame. 
+ #sirve: cuando después hagas modificaciones, no modificás accidentalmente el DataFrame original (df). 
+ #El .copy() es para trabajar con el nuevo DataFrame sin las filas eliminadas, de forma independiente al original.
+ #eliminas filas con nulos en columnas importantes, creas una copia independiente
     
     
-    df_limpio["Personality"] = df_limpio["Personality"].str.upper().str.strip()
+    df_limpio["Personality"] = ( df_limpio["Personality"] .str.upper().str.strip())
     
-    cols_numericas = [  # lista de columnas que deben convertirse a números
+    # lista de columnas que deben convertirse a números
+    cols_numericas = [  
      "Introversion Score", "Sensing Score",
      "Thinking Score", "Judging Score"]
 
-    for col in cols_numericas:  # recorre cada columna numérica
-         df_limpio[col] = pd.to_numeric(df_limpio[col], errors="coerce")  # convierte a número, errores → NaN
+    for col in cols_numericas:  # recorre cada columna numérica e intenta transofrmar a float. 
+        try: 
+            df_limpio[col] = df_limpio[col].astype(float)#astype(float) → convierte a número
+        except ValueError: # si algún valor no se puede convertir a número (ej: texto),no rompe el programa y muestra un mensaje de error
+            print(f"Error al convertir la columna {col}")
 
-    mask_numericos = (  # máscara para eliminar filas con valores NaN después de la conversión
-     df_limpio["Introversion Score"].notnull() &
-     df_limpio["Sensing Score"].notnull() &
-     df_limpio["Thinking Score"].notnull() &
-     df_limpio["Judging Score"].notnull())
+    df_limpio = df_limpio.dropna(subset=cols_numericas).copy() #Elimina filas que quedaron inválidas. 
+#estás trabajando sobre df_limpio (que ya es una copia). astype(float) puede haber generado NaN si algo falló (o si ya había problemas)
+#entonces: eliminas esas filas con NaN y haces otra copia independiente.
+#estás haciendo una copia de un DataFrame que ya era copia, pero ahora filtrado otra vez.
 
-    df_limpio = df_limpio.loc[mask_numericos].copy()  # aplica la máscara y filtra filas válidas
+    filas_finales = len(df_limpio) #Cuenta cuántas filas quedaron en el DataFrame después de la limpieza.
 
-    filas_finales = len(df_limpio)  # cuenta cuántas filas quedaron después de limpiar
+    print(f"Datos limpios: {filas_finales} registros disponibles.")
 
-    eliminadas = filas_originales - filas_finales  # calcula cuántas filas se eliminaron
+    return df_limpio.reset_index(drop=True)# .reset_index() Esto reinicia los índices del DataFrame.
+#Toma el DataFrame limpio y volvé a numerar las filas desde cero.
+#Después de eliminar filas (con dropna), los números de las filas quedan “saltados” entonces aca ordenas bien los indices. 
+#drop=True : No guardes los números viejos como una columna nueva. 
+#si fuese drop=False (o sin escribir nada). El índice viejo se convierte en columna:Sirve si te interesa guardar el índice original como dato. 
 
-    print(f"Se eliminaron {eliminadas} filas con datos incompletos.")  # muestra cuántas filas se eliminaron
 
-    print(f"Datos limpios: {filas_finales} registros disponibles.")  # muestra cuántas filas quedaron
-
-    return df_limpio.reset_index(drop=True)  # devuelve el DataFrame limpio con índice reiniciado

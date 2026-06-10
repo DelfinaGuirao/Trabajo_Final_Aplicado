@@ -1,6 +1,4 @@
 """
-analisis_dataset.py
-
 Módulo de análisis descriptivo y estadístico del dataset MBTI.
 
 IMPORTANTE: El dataset es SINTÉTICO. Los análisis son exploratorios
@@ -62,8 +60,7 @@ def intereses_predominantes(df, tipo): #un grafico intereante seria una nube de 
 
 def calcular_promedios_por_tipo(datos_mbti, tipo_mbti):
     """
-    Calcula los puntajes promedio de las dimensiones MBTI
-    para un tipo de personalidad específico.
+    Calcula los puntajes promedio de las dimensiones MBTI para un tipo de personalidad específico.
 
     Parámetros:
         datos_mbti (pd.DataFrame):
@@ -116,6 +113,19 @@ def calcular_promedios_por_tipo(datos_mbti, tipo_mbti):
 def calcular_rareza(datos_mbti, tipo_mbti):
     """
     Calcula la frecuencia de un tipo MBTI dentro del dataset.
+    Parametros:
+        datos_mbti(pd.Dataframe): dataset pasado por pandas
+        tipo_mbti (str): tipo de personalidad MBTI
+        
+    Devuelve:
+        dicc:
+            {
+                "porcentaje": porcentaje,
+                "cantidad": int(cantidad_tipo),
+                "total": total_personas,
+                "ranking": ranking,
+                "total_tipos": len(tipos_ordenados)
+            }
     """
 
     total_personas = len(datos_mbti)
@@ -171,7 +181,6 @@ def comparar_usuario_vs_grupo(datos_mbti, tipo_mbti, scores_usuario):
         dict:
             Comparación entre el usuario y el promedio
             de su grupo MBTI.
-
         None:
             Si el tipo MBTI no existe en el dataset.
     """

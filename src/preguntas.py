@@ -41,7 +41,7 @@ def obtener_preguntas():
     
     preguntas = [
 
-        # ─── Dimensión E/I (Extroversión / Introversión) ───
+        #  Dimensión E/I (Extroversión/Introversión) 
         {
             "pregunta": "Preferís pasar el tiempo libre con grupos de personas "
                         "en lugar de estar solo/a.",
@@ -73,7 +73,7 @@ def obtener_preguntas():
             "direccion": "E"
         },
 
-        # ─── Dimensión S/N (Sensorial / Intuitivo) ───
+        #  Dimensión S/N (Sensorial/Intuitivo) 
         {
             "pregunta": "Preferís basarte en hechos concretos y detalles "
                         "antes de tomar decisiones.",
@@ -105,7 +105,7 @@ def obtener_preguntas():
             "direccion": "S"
         },
 
-        # ─── Dimensión T/F (Pensamiento / Sentimiento) ───
+        #  Dimensión T/F (Pensamiento/Sentimiento) 
         {
             "pregunta": "Al tomar decisiones importantes, priorizás la lógica "
                         "y los datos por sobre los sentimientos.",
@@ -137,7 +137,7 @@ def obtener_preguntas():
             "direccion": "F"
         },
 
-        # ─── Dimensión J/P (Juzgador / Perceptivo) ───
+        #  Dimensión J/P (Juzgador / Perceptivo) 
         {
             "pregunta": "Preferís tener un plan claro y definido antes de "
                         "comenzar cualquier proyecto.",

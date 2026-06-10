@@ -1,6 +1,4 @@
 """
-validaciones.py
-===============
 Módulo de validación de entradas del usuario.
 
 Responsabilidades:
