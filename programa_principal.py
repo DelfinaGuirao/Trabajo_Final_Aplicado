@@ -18,6 +18,7 @@ from src.analisis_dataset import (
 
 from src.resultados import mostrar_resultados_finales
 from src.utilidades import imprimir_banner, imprimir_separador
+from src.graficos import graficar_torta_usuario, graficar_barras_personalidades, grafico_intereses
 
 
 def main():

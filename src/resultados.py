@@ -9,6 +9,7 @@ Incluye:
 
 import pandas as pd
 from src.metricas import obtener_top_tipos
+from src.graficos import graficar_torta_usuario, graficar_barras_personalidades, grafico_intereses
 
 
 descripciones_tipos = {
@@ -80,7 +81,7 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
         print(f"  Afinidad {dominante}: {porcentaje:.1f}%\n")
     
     top5 = obtener_top_tipos(scores, afinidades)
-    print("TOP 5 TIPOS MÁS COMPATIBLES CON TU PERFIL")
+    print("TOP 5 TIPOS MÁS SIMILARES A TU PERFIL")
     
     for i, (t, pct) in enumerate(top5, 1):
         if t == tipo:
@@ -106,9 +107,15 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
     
     print("\n VISUALIZACIONES GENERADAS")
     
-    print("  Ver carpeta: outputs/graficos/")
-    print("  1. Distribución MBTI en el dataset")
-    print("  2. Intereses por tipo")
-    print("  3. Afinidades por polo")
-
+    print("  Para observar las visualizacions, ver carpeta: graficos")
+    print("  1. Afinidades por polo ")
+    print("  2. Distribucion de tipos en el dataset")
+    print("  3. Intereses por tipo")
     
+    
+        
+
+            
+            
+            
+            

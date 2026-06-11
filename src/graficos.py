@@ -4,6 +4,7 @@ Módulo que genera los gráficos del sistema MBTI.
     - Gráfico 2: Barras con la distribución de personalidades en el dataset
 """
 import matplotlib.pyplot as plt
+from src.analisis_dataset import intereses_predominantes
 
 
 def graficar_torta_usuario(afinidades):
@@ -73,3 +74,29 @@ def graficar_barras_personalidades(df):
     plt.tight_layout()
     plt.savefig('outputs/graficos/barras_personalidades.png')  # guarda el gráfico
     plt.show()
+
+
+
+def grafico_intereses(df, tipo_mbti): #piechart
+    
+    subgrupo= intereses_predominantes(df, tipo_mbti)
+    
+    intereses= subgrupo["Interest"].value_counts.head(6)  #cuenta los intereses y toma los 6 mas frecentes
+    
+    fig, ax = plt.subplots(figsize=(8, 8)) 
+    
+    fig.patch.set_facecolor('#F8F9FA') #fonfo gris clarito
+    
+    ax.pie( intereses.values, labels=intereses.index, autopct='%1.1f%%', colors=["#4D0B1A", "#1E9623", "#F2E646", "#7A428A", "#4C8FBF", "#BF4C9E"], startangle=90 )
+    
+    ax.set_title( f"Distribución de intereses — tipo {tipo_mbti}", fontsize=14, fontweight='bold', color='#2C3E50' ) 
+   
+    plt.tight_layout() 
+    
+    plt.savefig("outputs/graficos/pie_tipo_intereses.png", dpi=120) 
+    
+    plt.show()
+    
+    plt.close()
+    
+    
