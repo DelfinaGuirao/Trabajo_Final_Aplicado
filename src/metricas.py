@@ -168,7 +168,7 @@ def obtener_top_tipos(puntajes, afinidades, top_n = 5):
     
    
     def obtener_porcentaje(tupla):
-            return tupla[1]
+        return tupla[1]
     #ordena (con .sort() de mayor a menor (reverse = True) el porcentaje de cada tupla.
     resultados.sort(key=obtener_porcentaje, reverse=True)  
 
