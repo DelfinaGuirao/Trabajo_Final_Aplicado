@@ -217,3 +217,11 @@ def comparar_usuario_vs_grupo(datos_mbti, tipo_mbti, scores_usuario):
         }
 
     return comparacion
+
+def calcular_genero_por_tipo (df, tipo_mbti):
+    subgrupo= df[df["Personality"]== tipo_mbti]
+    genero= subgrupo["Gender"].value_counts()
+    genero_pct= (genero/len(subgrupo)*100).round(1)
+    
+    return genero_pct
+    

@@ -13,12 +13,13 @@ from src.analisis_dataset import (
     intereses_predominantes,
     calcular_promedios_por_tipo,
     calcular_rareza,
-    comparar_usuario_vs_grupo
+    comparar_usuario_vs_grupo,
+    calcular_genero_por_tipo
 )
 
 from src.resultados import mostrar_resultados_finales
 from src.utilidades import imprimir_banner, imprimir_separador
-from src.graficos import graficar_torta_usuario, graficar_barras_personalidades, grafico_intereses
+from src.graficos import graficar_torta_usuario, graficar_genero_por_tipo, grafico_intereses
 
 
 def main():
@@ -38,7 +39,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     # --- CARGA DEL DATASET ---
     print("\n Cargando dataset...")
     try:
-        df_inicial = cargar_dataset("data/dataset_mbti.csv")
+        df_inicial = cargar_dataset("datos/data.csv")
         df = limpiar_datos(df_inicial)
         print(f"Dataset cargado: {len(df)} registros disponibles para comparación.")
         
@@ -137,5 +138,42 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         comparacion=comparacion 
     )
     
+    while True:
+
+        try:
+            grafico_usuario = int(input("\nSeleccione una opción (1, 2 o 3): "))
+
+        except ValueError:
+            print("Error! Debe ingresar un número.")
+            continue
+
+        if grafico_usuario != 1 and grafico_usuario != 2 and grafico_usuario != 3:
+            print("Error! Debe ingresar 1, 2 o 3.")
+            continue
+
+        if grafico_usuario == 1:
+            graficar_torta_usuario(afinidades)
+
+        elif grafico_usuario == 2:
+            genero_pct= calcular_genero_por_tipo (df, tipo_predominante)
+            graficar_genero_por_tipo(genero_pct, tipo_predominante)
+
+        elif grafico_usuario == 3:
+            grafico_intereses(df, tipo_predominante)
+
+        while True:
+
+            seguir = input("\n¿Desea ver otro gráfico? (s/n): ").lower()
+
+            if seguir != "s" and seguir != "n":
+                print("Error! Debe ingresar 's' o 'n'.")
+                continue
+
+            break
+
+        if seguir == "n":
+            print("Fin del test. Gracias por tu participacion!")
+            break
+        
 main()
 
