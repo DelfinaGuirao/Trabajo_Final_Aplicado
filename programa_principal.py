@@ -141,6 +141,12 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     while True:
 
         try:
+            print("\n VISUALIZACIONES GENERADAS")
+            
+            print("  Para observar las visualizacions, ver carpeta: graficos")
+            print("  1. Afinidades por polo ")
+            print("  2. Distribucion de tipos en el dataset")
+            print("  3. Intereses por tipo")
             grafico_usuario = int(input("\nSeleccione una opción (1, 2 o 3): "))
 
         except ValueError:
@@ -152,14 +158,14 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
             continue
 
         if grafico_usuario == 1:
-            graficar_torta_usuario(afinidades)
+            graficar_torta_usuario(afinidades, nombre)
 
         elif grafico_usuario == 2:
             genero_pct= calcular_genero_por_tipo (df, tipo_predominante)
-            graficar_genero_por_tipo(genero_pct, tipo_predominante)
+            graficar_genero_por_tipo(genero_pct, tipo_predominante, nombre)
 
         elif grafico_usuario == 3:
-            grafico_intereses(df, tipo_predominante)
+            grafico_intereses(df, tipo_predominante, nombre)
 
         while True:
 

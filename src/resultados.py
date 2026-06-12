@@ -105,12 +105,7 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
             print(f"  {interes}: {pct:.1f}%")
     
     
-    print("\n VISUALIZACIONES GENERADAS")
-    
-    print("  Para observar las visualizacions, ver carpeta: graficos")
-    print("  1. Afinidades por polo ")
-    print("  2. Distribucion de tipos en el dataset")
-    print("  3. Intereses por tipo")
+   
     
     
         
