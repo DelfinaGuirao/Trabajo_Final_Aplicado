@@ -10,9 +10,7 @@ Incluye:
 
 def imprimir_banner(): 
     """Imprime el banner de bienvenida del sistema."""
-    print(""" BIENVENIDOS AL EXPLORADOR DE PERSONALIDADES DE MBTI. Es de uso\n
-          educativo y exploratorio unicamente. Presentado por estudientes de la UdeSa\n
-    IMPORTANTE: no es el test oficial del MBTI, simplemente es una inspiracion del mismo""")
+    print(""" BIENVENIDOS AL EXPLORADOR DE PERSONALIDADES DE MBTI. Es de uso educativo y exploratorio unicamente. Presentado por estudientes de la UdeSa\n""")
 
 
 def imprimir_separador(largo: int = 55): #imprime una línea de guiones en la consola para separar visualmente secciones de texto.
