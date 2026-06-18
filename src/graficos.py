@@ -31,7 +31,7 @@ def graficar_torta_usuario(afinidades, nombre):
         startangle=90       # empieza desde arriba
     )
 
-    plt.title('Afinidad para {nombre} por cada letra de su MBTI')
+    plt.title(f'Afinidad para {nombre} por cada letra de su MBTI')
 
     plt.tight_layout()  #acomoda elementos del gráfico para que no se superpongan ni queden cortados
     plt.savefig("outputs/graficos/graficar_torta_usuario.png")
