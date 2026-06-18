@@ -137,6 +137,10 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         rareza=rareza,
         comparacion=comparacion 
     )
+    if df is None:
+        print("\nNo se generarán gráficos porque el dataset no pudo cargarse.")
+        print("Fin del test. Gracias por tu participación!")
+        return
     
     while True:
 
@@ -161,10 +165,17 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
             graficar_torta_usuario(afinidades, nombre)
 
         elif grafico_usuario == 2:
+            if df is None:
+                print("No se puede generar el gráfico porque no hay dataset cargado.")
+                continue
+
             genero_pct= calcular_genero_por_tipo (df, tipo_predominante)
             graficar_genero_por_tipo(genero_pct, tipo_predominante, nombre)
 
         elif grafico_usuario == 3:
+            if df is None:
+                print("No se puede generar el gráfico porque no hay dataset cargado.")
+                continue
             grafico_intereses(df, tipo_predominante, nombre)
 
         while True:

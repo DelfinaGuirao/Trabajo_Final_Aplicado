@@ -17,7 +17,6 @@ def graficar_torta_usuario(afinidades, nombre):
         afinidades (dict): Diccionario con porcentajes por polo.
                            Ejemplo: {'E': 70.0, 'I': 30.0, 'S': 45.0, ...}
     """
-
     # datos
     letras = list(afinidades.keys())         # ['E', 'I', 'S', 'N', 'T', 'F', 'J', 'P']
     porcentajes = list(afinidades.values())  # [70.0, 30.0, 45.0, ...]
@@ -76,12 +75,8 @@ def graficar_genero_por_tipo(genero_pct, tipo_usuario, nombre):
 
 
 def grafico_intereses(df, tipo_mbti, nombre):
-
+    
     intereses = intereses_predominantes(df, tipo_mbti)
-
-    if intereses is None:
-        print(f"No se encontraron personas del tipo {tipo_mbti}.")
-        return
 
     intereses = intereses.head(6)
 
