@@ -34,7 +34,7 @@ def validar_genero ():
     Acepta: M, F, Otro (insensible a mayúsculas).
 
     Returns:
-        str: Género normalizado ('M', 'F', 'Otro') o 'No especificado'.
+        str: Género normalizado ('M', 'F', 'Otro').
     """ 
     opciones_validas = {
         'm': 'M', 'masculino': 'M', 'hombre': 'M',
