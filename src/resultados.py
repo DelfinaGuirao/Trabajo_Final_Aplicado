@@ -32,7 +32,7 @@ descripciones_tipos = {
 }
 
 
-def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=None, intereses=None, rareza=None, comparacion=None):
+def mostrar_resultados_finales(nombre, tipo, afinidades, scores, intereses=None, rareza=None, comparacion=None):
     """
     Muestra el resumen completo de resultados en la consola.
 
@@ -89,6 +89,25 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
         else:
             marca= ""
         print(f"  {i}. {t}: {pct:.1f}%{marca}")
+        
+    if comparacion is not None:
+
+        print(f"\nCOMPARACIÓN CON EL PROMEDIO DEL TIPO {tipo}")
+
+        nombres_dimensiones = {
+            "EI": "Extroversión / Introversión",
+            "SN": "Sensorial / Intuitivo",
+            "TF": "Pensamiento / Sentimiento",
+            "JP": "Juzgador / Perceptivo"
+            }
+
+        for dimension, datos in comparacion.items():
+            
+            nombre = nombres_dimensiones.get(dimension, dimension)
+
+            print(f"\n{nombre}")
+            print(f"  Tu score: {datos['usuario']}")
+            print(f"  Promedio del grupo: {datos['promedio_grupo']}")
     
     if rareza is not None:
         print("\n TU PERFIL EN EL DATASET")

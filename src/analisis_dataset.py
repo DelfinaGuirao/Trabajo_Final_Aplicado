@@ -7,29 +7,11 @@ y no representan poblaciones clínicas reales.
 Responsabilidades:
 - Calcular distribución de tipos MBTI en el dataset
 - Identificar intereses predominantes por tipo
-- Calcular promedios de scores por tipo
 - Determinar rareza/frecuencia del perfil del usuario
 - Comparar usuario contra promedio del grupo
 """
 
 import pandas as pd
-
-
-def calcular_distribucion_mbti(df):
-    """
-    Calcula la distribución porcentual de tipos MBTI en el dataset.
-
-    Parámetros:
-        df (pd.DataFrame): Dataset MBTI limpio.
-
-    Retorna:
-        distribucion_pct(pd.Series) : Porcentaje de cada tipo MBTI, ordenado de mayor a menor.
-    """
-    total = len(df)
-    distribucion = df['Personality'].value_counts()
-    distribucion_pct = (distribucion / total * 100).round(2)
-    return distribucion_pct
-
 
 def intereses_predominantes(df, tipo): #un grafico intereante seria una nube de palabras
     """
@@ -58,57 +40,6 @@ def intereses_predominantes(df, tipo): #un grafico intereante seria una nube de 
     return intereses_pct
 
 
-def calcular_promedios_por_tipo(datos_mbti, tipo_mbti):
-    """
-    Calcula los puntajes promedio de las dimensiones MBTI para un tipo de personalidad específico.
-
-    Parámetros:
-        datos_mbti (pd.DataFrame):
-            DataFrame que contiene la información del dataset.
-
-        tipo_mbti (str):
-            Tipo MBTI que se desea analizar.
-            Ejemplos: "ENFP", "INTJ", "ENTP".
-
-    Retorna:
-        dict:
-            Diccionario con los promedios de cada dimensión.
-
-            Ejemplo:
-            {
-                "Introversion": 6.42,
-                "Sensing": 4.81,
-                "Thinking": 7.23,
-                "Judging": 5.94
-            }
-
-        None:
-            Si el tipo MBTI no existe en el dataset.
-    """
-
-    columnas_scores = {
-        "Introversion Score": "Introversion",
-        "Sensing Score": "Sensing",
-        "Thinking Score": "Thinking",
-        "Judging Score": "Judging"
-    }
-
-    personas_del_tipo = datos_mbti[
-        datos_mbti["Personality"] == tipo_mbti
-    ]
-
-    if len(personas_del_tipo) == 0:
-        return None
-
-    promedios = {}
-
-    for columna_original, nombre_dimension in columnas_scores.items():
-
-        if columna_original in datos_mbti.columns:
-
-            promedios[nombre_dimension] = round(personas_del_tipo[columna_original].mean(), 2)
-
-    return promedios
 
 def calcular_rareza(datos_mbti, tipo_mbti):
     """

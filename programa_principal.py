@@ -9,9 +9,7 @@ from src.preguntas import obtener_preguntas
 from src.validaciones import validar_edad, validar_genero, validar_respuesta
 from src.metricas import calcular_scores, calcular_afinidades, determinar_tipo_mbti
 from src.analisis_dataset import (
-    calcular_distribucion_mbti,
     intereses_predominantes,
-    calcular_promedios_por_tipo,
     calcular_rareza,
     comparar_usuario_vs_grupo,
     calcular_genero_por_tipo
@@ -96,9 +94,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     tipo_predominante = determinar_tipo_mbti(scores)
     
     # --- ANÁLISIS COMPARATIVO ---
-    distribucion = None
     intereses = None
-    promedios = None
     rareza = None
     comparacion = None
     
@@ -107,14 +103,8 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
     
         try:
 
-            distribucion = calcular_distribucion_mbti(df)
-
             intereses = intereses_predominantes(df, tipo_predominante)
-
-            promedios = calcular_promedios_por_tipo(df, tipo_predominante)
-            
-            promedios = calcular_promedios_por_tipo(df, tipo_predominante)
-            
+                        
             rareza = calcular_rareza(df, tipo_predominante)
 
             comparacion = comparar_usuario_vs_grupo(df, tipo_predominante, scores)
@@ -132,7 +122,6 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
         tipo=tipo_predominante,
         afinidades=afinidades,
         scores=scores,
-        distribucion=distribucion,
         intereses=intereses,
         rareza=rareza,
         comparacion=comparacion 

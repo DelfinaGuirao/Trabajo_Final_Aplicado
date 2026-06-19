@@ -5,7 +5,7 @@ Módulo que genera los gráficos del sistema MBTI.
     - Gráfico 2: Torta de los 6 intereses predominantes para el tipo MBTI
 """
 import matplotlib.pyplot as plt
-from src.analisis_dataset import intereses_predominantes, calcular_distribucion_mbti, calcular_genero_por_tipo
+from src.analisis_dataset import intereses_predominantes, calcular_genero_por_tipo
 
 
 
