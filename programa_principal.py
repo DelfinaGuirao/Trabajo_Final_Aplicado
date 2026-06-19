@@ -149,7 +149,7 @@ Usá este sistema como una experiencia lúdica y reflexiva, no como un diagnóst
             
             print("  Para observar las visualizacions, ver carpeta: graficos")
             print("  1. Afinidades por polo ")
-            print("  2. Distribucion de género por tipo")
+            print("  2. Género por tipo")
             print("  3. Intereses por tipo")
             grafico_usuario = int(input("\nSeleccione una opción (1, 2 o 3): "))
 

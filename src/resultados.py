@@ -59,10 +59,10 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, distribucion=No
     print("AFINIDADES PORCENTUALES POR DIMENSIÓN")
     
     dimensiones = [
-        ('E', 'I', 'Extroversión / Introversión'),
-        ('S', 'N', 'Sensorial / Intuitivo'),
-        ('T', 'F', 'Pensamiento / Sentimiento'),
-        ('J', 'P', 'Juzgador / Perceptivo'),
+        ('E', 'I', 'Extroversión(E) / Introversión(I)'),
+        ('S', 'N', 'Sensorial(S) / Intuitivo(I)'),
+        ('T', 'F', 'Pensamiento(T) / Sentimiento(F)'),
+        ('J', 'P', 'Juzgador(J) / Perceptivo(P)'),
     ]
     
     for polo1, polo2, nombre_dim in dimensiones:
