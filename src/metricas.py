@@ -94,7 +94,7 @@ def calcular_afinidades(puntajes):
             puntaje = -MAX
 
         # Convierto el score a porcentaje
-        porcentaje = ((puntaje + MAX) / (2 * MAX)) * 100 #raris este calculo de porcentaje
+        porcentaje = ((puntaje + MAX) / (2 * MAX)) * 100 
 
         afinidades[polo1] = round(porcentaje, 1)
         afinidades[polo2] = round(100 - porcentaje, 1) #el porcentaje del polo dos es lo que le sobra al polo uno para llegar a 100 porq son complememtarios!!
@@ -162,7 +162,7 @@ def obtener_top_tipos(puntajes, afinidades, top_n = 5):
             afinidades[tipo[1]] *
             afinidades[tipo[2]] *
             afinidades[tipo[3]]
-        ) ** 0.25  #sacopromedio geometrico (porque geometrico?? porque tiene mas en cuenta valores por separado. ej en doc)
+        ) ** 0.25  #sacopromedio geometrico (porque geometrico?? porque tiene mas en cuenta valores por separado)
         
         resultados.append((tipo, round(afin_tipo, 1))) # round rondea a decimales
     
