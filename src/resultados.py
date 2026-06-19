@@ -60,7 +60,7 @@ def mostrar_resultados_finales(nombre, tipo, afinidades, scores, intereses=None,
     
     dimensiones = [
         ('E', 'I', 'Extroversión(E) / Introversión(I)'),
-        ('S', 'N', 'Sensorial(S) / Intuitivo(I)'),
+        ('S', 'N', 'Sensorial(S) / Intuitivo(N)'),
         ('T', 'F', 'Pensamiento(T) / Sentimiento(F)'),
         ('J', 'P', 'Juzgador(J) / Perceptivo(P)'),
     ]
